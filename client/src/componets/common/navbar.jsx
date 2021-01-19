@@ -1,7 +1,9 @@
-import logo from "../../assets/images/logos/logo2.png"
+import logo from "../../assets/images/logos/logo3.png"
 
 function Navbar() {
     return (
+
+
         <div>
             <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">

@@ -47,9 +47,8 @@ function Login() {
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <div className="column is-5-tablet is-4-desktop is-3-widescreen">
+              <div className="column is-5-tablet is-4-desktop is-5-widescreen">
                 <form action="" className="box">
-
                   <div className="has-text-centered">
                     <img className="login-logo" src={logo} />
                     <h1 className="title is-3" style={{ color: '#555' }}>Iniciar sesión</h1>
