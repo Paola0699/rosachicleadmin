@@ -32,7 +32,6 @@ function Login() {
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID
     ]
   };
 
@@ -43,7 +42,6 @@ function Login() {
       <div>
         <h1>My App</h1>
         <p>Please sign-in:</p>
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
       </div>  */}
       <section className="hero is-primary is-fullheight">
         <div className="hero-body">
@@ -58,7 +56,6 @@ function Login() {
                     <h2 className="subtitle is-6" style={{ color: 'black' }}>Ingrese sus datos para continuar</h2>
                     <hr className="login-hr" />
                   </div>
-
 
                   <div className="field">
                     <p className="control has-icons-left has-icons-right">
@@ -79,9 +76,11 @@ function Login() {
                         <FontAwesomeIcon icon={faLock} />
                       </span>
                     </p>
+                  </div>  
+                  <div className='field'>
+                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                   </div>
-
-
+                  <hr className="login-hr" />
                   <div className="field">
                     <button className="button is-success is-fullwidth ">
                       Iniciar sesión
