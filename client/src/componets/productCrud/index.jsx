@@ -1,8 +1,10 @@
+import Navbar from "../common/navbar"
+
 function ProductCrud() {
-    return (
-      <div className="App">
-        <h1>Hola, aqui vas a crear productos </h1>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Navbar/>
+    </div>
+  );
+}
 export default ProductCrud;

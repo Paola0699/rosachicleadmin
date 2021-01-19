@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import firebase from '../../firebaseElements/firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import './login.scss'
-import logo from "./logo2.png"
+import logo from "../../assets/images/logos/logo.png"
 import './estilos.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faLock, faUser } from '@fortawesome/free-solid-svg-icons'
