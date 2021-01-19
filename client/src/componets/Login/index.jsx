@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import firebase from '../../firebaseElements/firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import './login.scss'
-import logo from "./logo3.png"
+import logo from "./logo2.png"
 import './estilos.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faLock, faUser } from '@fortawesome/free-solid-svg-icons'
@@ -52,8 +52,8 @@ function Login() {
 
                   <div className="has-text-centered">
                     <img className="login-logo" src={logo} />
-                    <h1 className="title" style={{ color: 'black' }}>Iniciar sesión</h1>
-                    <h2 className="subtitle is-6" style={{ color: 'black' }}>Ingrese sus datos para continuar</h2>
+                    <h1 className="title is-3" style={{ color: '#555' }}>Iniciar sesión</h1>
+                    <h2 className="subtitle is-6" style={{ color: '#757575' }}>Ingrese sus datos para continuar</h2>
                     <hr className="login-hr" />
                   </div>
 
