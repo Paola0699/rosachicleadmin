@@ -3,7 +3,6 @@ import firebase from '../../firebaseElements/firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import './login.scss'
 import logo from "../../assets/images/logos/logo.png"
-import './estilos.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faLock, faUser } from '@fortawesome/free-solid-svg-icons'
 
@@ -47,7 +46,7 @@ function Login() {
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <div className="column is-5-tablet is-4-desktop is-5-widescreen">
+              <div className="column is-5-tablet is-4-desktop is-4-widescreen">
                 <form action="" className="box">
                   <div className="has-text-centered">
                     <img className="login-logo" src={logo} />
