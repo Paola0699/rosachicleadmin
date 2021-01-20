@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import firebase from '../../firebaseElements/firebase'
 import './login.scss'
 import logo from "../../assets/images/logos/logo.png"
-import './estilos.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faLock, faUser } from '@fortawesome/free-solid-svg-icons'
 import { Redirect } from 'react-router-dom'
@@ -58,6 +57,7 @@ function Login() {
             <div className="columns is-centered">
               <div className="column is-5-tablet is-4-desktop is-5-widescreen">
                 <form action="" className="box" onSubmit={handleSubmit}>
+
                   <div className="has-text-centered">
                     <img className="login-logo" src={logo} />
                     <h1 className="title is-3" style={{ color: '#555' }}>Iniciar sesión</h1>

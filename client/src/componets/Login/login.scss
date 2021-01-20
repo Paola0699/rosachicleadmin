@@ -3,5 +3,13 @@
     $success: #1293e1;
     $link: #fff;
     $breadcrumb-item-active-color: #4dbbff;
+    $card-header-background-color:  rgba(219, 217, 217, 0.158);
+    
+    .login-logo {
+        margin: 0 auto;
+        margin-bottom: 20px;
+        max-height: 100px;
+      
+    }
     
 @import "bulma/bulma.sass";

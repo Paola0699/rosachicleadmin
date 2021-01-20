@@ -35,7 +35,11 @@ function Navbar() {
                                     Nueva Venta
                                 </a>
                                 <a className="navbar-item">
-                                    Todos las Ventas
+                                    Ventas Generales
+                                </a>
+
+                                <a className="navbar-item">
+                                    Ventas por Categoria
                                 </a>
                             </div>
                         </div>
