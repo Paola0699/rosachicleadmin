@@ -7,6 +7,7 @@ import ProductCrud from './productCrud'
 import Products from './productCrud/products'
 import Newsale from './saleCrud/newsale'
 import Login from './Login'
+import Sales from './saleCrud/sales'
 const routes = [
   {
     path: "",
@@ -23,6 +24,10 @@ const routes = [
   {
     path: "nueva-venta",
     component: <Newsale />,
+  },
+  {
+    path: "ventas",
+    component: <Sales />,
   },
 ];
 
