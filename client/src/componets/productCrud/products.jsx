@@ -120,7 +120,7 @@ function Products() {
                                     </div>
                                 </div>
                                 <div class="control">
-                                    <button type="submit" class="button is-primary">Choose</button>
+                                    <button type="submit" class="button is-primary">Seleccionar</button>
                                 </div>
                             </div>
                         </div>

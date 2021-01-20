@@ -5,6 +5,7 @@ import Helmet from "./common/Helmet";
 import Switch from "./common/Switch";
 import ProductCrud from './productCrud'
 import Products from './productCrud/products'
+import Newsale from './saleCrud/newsale'
 import Login from './Login'
 const routes = [
   {
@@ -18,6 +19,10 @@ const routes = [
   {
     path: "productos",
     component: <Products />,
+  },
+  {
+    path: "nueva-venta",
+    component: <Newsale />,
   },
 ];
 
