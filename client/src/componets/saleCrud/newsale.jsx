@@ -32,7 +32,7 @@ function Newsale() {
                                     </div>
                                 </div>
                                 <div class="control">
-                                    <button type="submit" class="button is-primary">Seleccionar</button>
+                                    <button type="submit" class="button is-success">Seleccionar</button>
                                 </div>
                             </div>
                         </div>
@@ -43,44 +43,26 @@ function Newsale() {
                             <div className='card'>
                                 <header class="card-header">
                                     <p class="card-header-title">
-                                        Nueva Categoría
+                                        Productos de la  Categoría
                                     </p>
-                                    <a href="#" class="card-header-icon" aria-label="more options">
-                                        <span class="icon">
-                                            <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                        </span>
-                                    </a>
                                 </header>
-                                <div class="card-content">
+                                <div class="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
                                     <div class="content">
-
-
-
-                                        <div class="field has-addons">
-                                            <div class="control is-expanded">
-                                                <input class="input " type="text" placeholder="Nombre Categoría" />
-                                            </div>
-                                            <div class="control">
-                                                <a class="button is-success">
-                                                    Crear Categoría
-                        </a>
-                                            </div>
-                                        </div>
-
-                                        <br />
-
-                                        <table>
+                                        <table className="table is-hoverable">
                                             <tr>
-                                                <th>Nombre</th>
-                                                <th>Acciones</th>
+                                                <th>Producto</th>
+                                                <th>Descripción</th>
+                                                <th>Precio</th>
                                             </tr>
                                             <tr>
-                                                <td>Juice</td>
-                                                <td><button class="button is-success is-outlined is-small">Eliminar</button></td>
+                                                <td>Vita - C</td>
+                                                <td>Naranja, Guayaba, Piña, Miel, Limón, Jengibre.</td>
+                                                <td>$40.00</td>
                                             </tr>
                                             <tr>
-                                                <td>Smoothies</td>
-                                                <td><button class="button is-success is-outlined is-small">Eliminar</button></td>
+                                                <td>Verde</td>
+                                                <td>Espinaca, Pepino, Nopal, Apio, Perejil, Piña, Jengibre.</td>
+                                                <td>$40.00</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -91,84 +73,50 @@ function Newsale() {
                             <div className='card'>
                                 <header class="card-header">
                                     <p class="card-header-title">
-                                        Nuevo Producto
-                </p>
-                                    <a href="#" class="card-header-icon" aria-label="more options">
-                                        <span class="icon">
-                                            <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                        </span>
-                                    </a>
+                                        Productos en la Orden
+                                    </p>
                                 </header>
-                                <div class="card-content">
+                                <div class="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
                                     <div class="content">
-                                        <div class="field">
-                                            <label class="label">Nombre</label>
-                                            <div class="control">
-                                                <input class="input" type="text" placeholder="Nombre del producto" />
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label class="label">Categoría</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select>
-                                                        <option>Seleccione una categoría</option>
-                                                        <option>Juice</option>
-                                                        <option>Smoothies</option>
-                                                    </select>
+                                        <table className="table is-hoverable">
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th>Descripción</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio Unitario</th>
+                                                <th>Total</th>
+                                            </tr>
+                                            <tr>
+                                                <td>Vita - C</td>
+                                                <td>Naranja, Guayaba, Piña, Miel, Limón, Jengibre.</td>
+                                                <td><div style={{ display: 'flex' }}>
+                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '4px 0px 0px 4px' }}>-</button>
+                                                    <div style={{ display: 'flex', alignItems: 'center', padding: '.5rem .8rem', border: '1px solid rgb(221, 221, 221)' }}> 2 </div>
+                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '0px 4px 4px 0px' }}>+</button>
                                                 </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="field">
-                                            <label class="label">Descripción</label>
-                                            <div class="control">
-                                                <textarea class="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label class="label">Calorias</label>
-                                            <div class="control">
-                                                <input class="input" type="number" placeholder="Calorias del producto" />
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label class="label">Costo de Producción</label>
-                                            <div class="control  has-icons-left">
-                                                <input class="input" type="number" />
-                                                <span class="icon is-small is-left">
-                                                    <FontAwesomeIcon icon={faDollarSign} />
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label class="label">Precio de venta</label>
-                                            <div class="control  has-icons-left">
-                                                <input class="input" type="number" />
-                                                <span class="icon is-small is-left">
-                                                    <FontAwesomeIcon icon={faDollarSign} />
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <label class="checkbox">
-                                            <input type="checkbox" />
-                        Disponibilidad del Producto
-                    </label>
-
-                                        <br />
-                                        <br />
-                                        <button class="button is-success is-fullwidth">Crear Producto</button>
-
+                                                </td>
+                                                <td>$40.00</td>
+                                                <td>$80.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Verde</td>
+                                                <td>Espinaca, Pepino, Nopal, Apio, Perejil, Piña, Jengibre.</td>
+                                                <td><div style={{ display: 'flex' }}>
+                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '4px 0px 0px 4px' }}>-</button>
+                                                    <div style={{ display: 'flex', alignItems: 'center', padding: '.5rem .8rem', border: '1px solid rgb(221, 221, 221)' }}> 3 </div>
+                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '0px 4px 4px 0px' }}>+</button>
+                                                </div>
+                                                </td>
+                                                <td>$40.00</td>
+                                                <td>$120.00</td>
+                                            </tr>
+                                        </table>
 
                                     </div>
                                 </div>
                             </div>
+                            <br/>
+                            <button className='button is-success is-fullwidth'>CONFIRMAR ORDEN</button>
                         </div>
                     </div>
                 </div>
