@@ -1,5 +1,4 @@
 import Navbar from "../common/navbar"
-import breadcrum from "../common/breadcrum"
 import Breadcrum from "../common/breadcrum"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
@@ -49,7 +48,7 @@ function ProductCrud() {
                       </div>
                     </div>
 
-                    <br/>
+                    <br />
 
                     <table>
                       <tr>
@@ -100,6 +99,13 @@ function ProductCrud() {
                             <option>Smoothies</option>
                           </select>
                         </div>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Descripción</label>
+                      <div class="control">
+                        <textarea class="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
                       </div>
                     </div>
 
