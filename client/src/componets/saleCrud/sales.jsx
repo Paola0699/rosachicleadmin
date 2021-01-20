@@ -1,6 +1,8 @@
 import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
+import CurrencyFormat from 'react-currency-format';
+
 
 const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
 const columns = [
@@ -117,6 +119,25 @@ function Sales() {
                             </div>
                         </div>
                     </div>
+
+                    <section class="section">
+                        <div class="container">
+                            <table className='table' style={{ marginBottom: '2%', textAlign: 'center' }}>
+                                <tr>
+                                    <th className='ocultar-div'><small>Pagos </small><br />Efectivo</th>
+                                    <th className='ocultar-div'><small>Pagos </small><br />Tarjeta Crédito</th>
+                                    <th className='ocultar-div'><small>Pagos </small><br />Tarjeta Débito</th>
+                                    <th style={{ backgroundColor: '#f06292' }}><small>Total </small><br />Ventas</th>
+                                </tr>
+                                <tr>
+                                    <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={125} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                    <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={200} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                    <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                    <td style={{ backgroundColor: '#f06292' }}><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </section>
                     <DataTable
                         columns={columns}
                         data={data}
