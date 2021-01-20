@@ -1,54 +1,62 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import firebase from '../../firebaseElements/firebase'
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import './login.scss'
 import logo from "../../assets/images/logos/logo.png"
 import './estilos.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faLock, faUser } from '@fortawesome/free-solid-svg-icons'
+import { Redirect } from 'react-router-dom'
 
 function Login() {
   const db = firebase.firestore();
-  /*  useEffect(() => {
-     --> esto estaba comentado tambien const db = firebase.firestore(); 
-     db.collection("users").add({
-       first: "Ada",
-       last: "Lovelace",
-       born: 1815
-     }).then(function (docRef) {
-       console.log("Document written with ID: ", docRef.id);
-     }).catch(function (error) {
-       console.error("Error adding document: ", error);
-     });
-   }, []); */
+  async function getUserType(user, setUserType) {
+    const userType = await db.doc('accounts').collection("accounts").doc(user.uid).get()
+    if (userType.exists)
+      db.doc('accounts').collection("accounts").doc(user.uid).onSnapshot((doc) => {
+        if (doc.data().type === 'admin')
+          setUserType('admin')
+      });
+  }
+  function singIn(email, password){
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((user) => {
+      // Signed in 
+      // ...
+    })
+    .catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode,'-----', errorMessage)
+    });
+  }
 
-  // Configure FirebaseUI.
-  const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: 'redirect',
-    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: '/signedIn',
-    // Display auth providers.
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-    ]
-  };
+  const [userType, setUserType]= useState("")
+  const [mail, setMail]= useState("")
+  const [pass, setPass]= useState("")
 
-  return (
+  useEffect(() => {
+    //firebase.auth().signOut()//ELIMINAR close sesion at refresh 
+    firebase.auth().onAuthStateChanged(user => {
+      if (user){
+        //getUserType(user, setUserType)
+        console.log(`Hay un user ${user.email}`)
+      }
+      else
+        console.log('no user')
+    });
+  }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    singIn(mail,pass)
+}
+  return userType ? <Redirect to={'/'} /> :(
     <div className="App">
-
-      {/* <h1>Hola aqui va a ir el login</h1>
-      <div>
-        <h1>My App</h1>
-        <p>Please sign-in:</p>
-      </div>  */}
       <section className="hero is-primary is-fullheight">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
               <div className="column is-5-tablet is-4-desktop is-5-widescreen">
-                <form action="" className="box">
+                <form action="" className="box" onSubmit={handleSubmit}>
                   <div className="has-text-centered">
                     <img className="login-logo" src={logo} />
                     <h1 className="title is-3" style={{ color: '#555' }}>Iniciar sesión</h1>
@@ -58,7 +66,7 @@ function Login() {
 
                   <div className="field">
                     <p className="control has-icons-left has-icons-right">
-                      <input className="input" type="email" placeholder="Usuario" />
+                      <input onChange={e=>setMail(e.target.value)} className="input" type="email" placeholder="Usuario" />
                       <span className="icon is-small is-left">
                         <FontAwesomeIcon icon={faUser} />
                       </span>
@@ -70,18 +78,16 @@ function Login() {
 
                   <div className="field">
                     <p className="control has-icons-left">
-                      <input className="input" type="password" placeholder="Contraseña" />
+                      <input onChange={e=>setPass(e.target.value)} className="input" type="password" placeholder="Contraseña" />
                       <span className="icon is-small is-left">
                         <FontAwesomeIcon icon={faLock} />
                       </span>
                     </p>
-                  </div>  
-                  <div className='field'>
-                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                   </div>
+
                   <hr className="login-hr" />
                   <div className="field">
-                    <button className="button is-success is-fullwidth ">
+                    <button type="submit" value="Submit"  className="button is-success is-fullwidth ">
                       Iniciar sesión
                     </button>
                   </div>
