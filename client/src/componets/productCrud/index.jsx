@@ -102,10 +102,18 @@ function ProductCrud() {
                       </div>
                     </div>
 
+
                     <div class="field">
                       <label class="label">Descripción</label>
                       <div class="control">
                         <textarea class="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Calorias</label>
+                      <div class="control">
+                        <input class="input" type="number" placeholder="Calorias del producto" />
                       </div>
                     </div>
 
