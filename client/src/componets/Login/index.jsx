@@ -40,6 +40,7 @@ function Login() {
       if (user){
         //getUserType(user, setUserType)
         console.log(`Hay un user ${user.email}`)
+        setUserType(true)
       }
       else
         console.log('no user')
@@ -49,7 +50,7 @@ function Login() {
     e.preventDefault();
     singIn(mail,pass)
 }
-  return userType ? <Redirect to={'/'} /> :(
+  return userType ? <Redirect to={'productos'} /> :(
     <div className="App">
       <section className="hero is-primary is-fullheight">
         <div className="hero-body">

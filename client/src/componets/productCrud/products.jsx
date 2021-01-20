@@ -95,23 +95,23 @@ function Products() {
     return (
         <div>
             <Navbar />
-            <section class="hero is-primary">
-                <div class="hero-body">
-                    <div class="container">
-                        <h1 class="title">Productos</h1>
-                        <h2 class="subtitle">Todos los Productos</h2>
+            <section className="hero is-primary">
+                <div className="hero-body">
+                    <div className="container">
+                        <h1 className="title">Productos</h1>
+                        <h2 className="subtitle">Todos los Productos</h2>
                         <Breadcrum />
                     </div>
                 </div>
             </section>
-            <section class="section">
-                <div class="container">
+            <section className="section">
+                <div className="container">
                     <div className='columns'>
                         <div className='column is-8'></div>
                         <div className='column is-4'>
-                            <div class="field has-addons">
-                                <div class="control is-expanded">
-                                    <div class="select is-fullwidth">
+                            <div className="field has-addons">
+                                <div className="control is-expanded">
+                                    <div className="select is-fullwidth">
                                         <select name="country">
                                             <option value="Argentina">Juice</option>
                                             <option value="Bolivia">Smoothies</option>
@@ -119,8 +119,8 @@ function Products() {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="control">
-                                    <button type="submit" class="button is-primary">Choose</button>
+                                <div className="control">
+                                    <button type="submit" className="button is-primary">Choose</button>
                                 </div>
                             </div>
                         </div>
