@@ -131,7 +131,7 @@ function Newoutcome() {
                                         <article class="message is-success">
                                             <div class="message-body">
                                                 Requisitos del Comprobante
-
+                                                <br/>
                                                 Para que tu Cobro/Pago sea válido, deberás anexar una imagen de tu comprobante. Este comprobante deberá ser: <strong>Ticket de compra, Factura, Recibo, Comprobante de Tranferencia Bancaria </strong>.
                                                 <br /> Es necesario que el monto del comprobante y la fecha coincidan con los datos ingresados en el sistema, de otro modo, este no será tomado en cuenta.
                                             </div>
