@@ -98,7 +98,6 @@ function Sales() {
                     </div>
                 </div>
             </section>
-
             <section class="section">
                 <div class="container">
                     <div className='columns'>
@@ -120,24 +119,23 @@ function Sales() {
                         </div>
                     </div>
 
-                    <section class="section">
-                        <div class="container">
-                            <table className='table' style={{ marginBottom: '2%', textAlign: 'center' }}>
-                                <tr>
-                                    <th className='ocultar-div'><small>Pagos </small><br />Efectivo</th>
-                                    <th className='ocultar-div'><small>Pagos </small><br />Tarjeta Crédito</th>
-                                    <th className='ocultar-div'><small>Pagos </small><br />Tarjeta Débito</th>
-                                    <th style={{ backgroundColor: '#f06292' }}><small>Total </small><br />Ventas</th>
-                                </tr>
-                                <tr>
-                                    <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={125} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
-                                    <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={200} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
-                                    <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
-                                    <td style={{ backgroundColor: '#f06292' }}><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </section>
+                    <div class="table-container">
+                        <table className='table' style={{ marginBottom: '2%', textAlign: 'center', width: '100%' }}>
+                            <tr>
+                                <th className='ocultar-div'><small>Pagos </small><br />Efectivo</th>
+                                <th className='ocultar-div'><small>Pagos </small><br />Tarjeta Crédito</th>
+                                <th className='ocultar-div'><small>Pagos </small><br />Tarjeta Débito</th>
+                                <th className='is-success'><small>Total </small><br />Ventas</th>
+                            </tr>
+                            <tr>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={125} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={200} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
+                            </tr>
+                        </table>
+                    </div>
+
                     <DataTable
                         columns={columns}
                         data={data}
@@ -147,8 +145,6 @@ function Sales() {
                     />
                 </div>
             </section>
-
-
         </div>
     )
 }

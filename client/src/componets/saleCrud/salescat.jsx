@@ -1,12 +1,13 @@
 import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
+import CurrencyFormat from 'react-currency-format';
 
 
 const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
 const columns = [
     {
-        name: 'Concepto',
+        name: 'Producto',
         selector: 'name',
         sortable: true,
     },
@@ -18,25 +19,19 @@ const columns = [
     },
 
     {
-        name: 'Importe',
+        name: 'Cantidad',
         selector: 'year',
         sortable: true,
         right: true,
     },
 
     {
-        name: 'Status',
+        name: 'Monto',
         selector: 'year',
         sortable: true,
         right: true,
     },
-    {
-        name: 'Detalles',
-        selector: 'year',
-        cell: row => <button className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>,
-        right: true,
-    },
-
+    
 ];
 
 const customStyles = {
@@ -91,16 +86,15 @@ const customStyles = {
     },
 };
 
-
-function Outcomes() {
+function Salescat() {
     return (
         <div>
             <Navbar />
             <section class="hero is-primary">
                 <div class="hero-body">
                     <div class="container">
-                        <h1 class="title">Gastos e Ingresos</h1>
-                        <h2 class="subtitle">Consulta los gastos e ingresos del periodo</h2>
+                        <h1 class="title">Ventas por Categoría</h1>
+                        <h2 class="subtitle">Consulta las ventas por categoría</h2>
                         <Breadcrum />
                     </div>
                 </div>
@@ -108,23 +102,7 @@ function Outcomes() {
             <section class="section">
                 <div class="container">
                     <div className='columns'>
-                        <div className='column'>
-                            <div class="field">
-                                <label class="label">Gastos / Ingresos</label>
-                                <div class="control">
-                                    <div class="select is-fullwidth">
-                                        <select>
-                                            <option>Seleccione concepto</option>
-                                            <option>Gastos</option>
-                                            <option>Ingresos</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='columns'>
-                        <div className='column is-6'>
+                        <div className='column is-4'>
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
@@ -132,7 +110,7 @@ function Outcomes() {
                                 </div>
                             </div>
                         </div>
-                        <div className='column is-6'>
+                        <div className='column is-4'>
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
@@ -140,6 +118,35 @@ function Outcomes() {
                                 </div>
                             </div>
                         </div>
+                        <div className='column is-4'>
+                            <div class="field">
+                                <label class="label">Categoría</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select>
+                                            <option>Seleccione una categoría</option>
+                                            <option>Juice</option>
+                                            <option>Smoothies</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table className='table' style={{ marginBottom: '2%', textAlign: 'center', width: '100%' }}>
+                            <tr>
+                                <th className='ocultar-div'><small>Costos de </small><br />Producción</th>
+                                <th className='ocultar-div'><small>Precio</small><br />Venta</th>
+                                <th className='is-success'><small>Ganancias </small><br />Netas</th>
+                            </tr>
+                            <tr>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={125} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={200} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
+                            </tr>
+                        </table>
                     </div>
 
                     <DataTable
@@ -154,4 +161,4 @@ function Outcomes() {
         </div>
     )
 }
-export default Outcomes;
+export default Salescat;
