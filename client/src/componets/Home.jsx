@@ -9,6 +9,7 @@ import Newsale from './saleCrud/newsale'
 import Login from './Login'
 import Sales from './saleCrud/sales'
 import Salescat from './saleCrud/salescat'
+import Balance from './generalbalance'
 const routes = [
   {
     path: "",
@@ -33,6 +34,10 @@ const routes = [
   {
     path: "ventas-desglosado",
     component: <Salescat/>,
+  },
+  {
+    path: "balance-general",
+    component: <Balance/>,
   },
 ];
 

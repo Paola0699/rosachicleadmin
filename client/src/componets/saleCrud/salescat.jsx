@@ -31,6 +31,7 @@ const columns = [
         sortable: true,
         right: true,
     },
+    
 ];
 
 const customStyles = {
