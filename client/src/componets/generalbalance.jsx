@@ -38,7 +38,7 @@ function Balance() {
                     </div>
 
 
-                    <div className='table-responsive'>
+                    <div className='table-container'>
                         <table className='table' style={{ marginBottom: '2%', width: '100%' }}>
                             <tbody >
                                 <tr style={{ textAlign: 'center' }}>
