@@ -8,6 +8,7 @@ import Products from './productCrud/products'
 import Newsale from './saleCrud/newsale'
 import Login from './Login'
 import Sales from './saleCrud/sales'
+import Salescat from './saleCrud/salescat'
 const routes = [
   {
     path: "",
@@ -29,6 +30,10 @@ const routes = [
     path: "ventas",
     component: <Sales />,
   },
+  {
+    path: "ventas-desglosado",
+    component: <Salescat/>,
+  },
 ];
 
 function Home() {
@@ -44,7 +49,6 @@ function Home() {
             {item.component}
           </Route>
         ))}
-
       </Switch>
     </div>
   );
