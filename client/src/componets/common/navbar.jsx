@@ -1,35 +1,43 @@
 import logo from "../../assets/images/logos/logo3.png"
+import { Link } from 'react-router-dom'
+import firebase from '../../firebaseElements/firebase'
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // Get all "navbar-burger" elements
     const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-  
+
     // Check if there are any navbar burgers
     if ($navbarBurgers.length > 0) {
-  
-      // Add a click event on each of them
-      $navbarBurgers.forEach( el => {
-        el.addEventListener('click', () => {
-  
-          // Get the target from the "data-target" attribute
-          const target = el.dataset.target;
-          const $target = document.getElementById(target);
-  
-          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-          el.classList.toggle('is-active');
-          $target.classList.toggle('is-active');
-  
+
+        // Add a click event on each of them
+        $navbarBurgers.forEach(el => {
+            el.addEventListener('click', () => {
+
+                // Get the target from the "data-target" attribute
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+
+                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
+
+            });
         });
-      });
     }
-  
-  });
+
+});
+
+function close(){
+    firebase.auth().signOut().then(function() {
+        console.log('Sign-out uccessful')
+      }).catch(function(error) {
+        // An error happened.
+      }); 
+}
 
 function Navbar() {
     return (
-
-
         <div>
             <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">
@@ -52,12 +60,16 @@ function Navbar() {
                             </a>
 
                             <div className="navbar-dropdown">
-                                <a className="navbar-item">
-                                    Nuevo Producto
-                                </a>
-                                <a className="navbar-item">
-                                    Todos los productos
-                                </a>
+                                <Link to={`${process.env.PUBLIC_URL}/producto`}>
+                                    <a className="navbar-item">
+                                        Nuevo Producto
+                                    </a>
+                                </Link>
+                                <Link to={`${process.env.PUBLIC_URL}/productos`}>
+                                    <a className="navbar-item">
+                                        Todos los productos
+                                    </a>
+                                </Link>
                             </div>
                         </div>
 
@@ -67,12 +79,21 @@ function Navbar() {
                             </a>
 
                             <div className="navbar-dropdown">
-                                <a className="navbar-item">
-                                    Alta de Gastos e Ingresos
-                                </a>
-                                <a className="navbar-item">
-                                    Consultar Gastos e Ingresos
-                                </a>
+                                <Link to={`${process.env.PUBLIC_URL}/alta-gasto`}>
+                                    <a className="navbar-item">
+                                        Alta de Gastos e Ingresos
+                                    </a>
+                                </Link>
+                                <Link to={`${process.env.PUBLIC_URL}/gastos`}>
+                                    <a className="navbar-item">
+                                        Consultar Gastos e Ingresos
+                                    </a>
+                                </Link>
+                                <Link to={`${process.env.PUBLIC_URL}/balance-general`}>
+                                    <a className="navbar-item">
+                                        Balance General
+                            </a>
+                                </Link>
                             </div>
                         </div>
 
@@ -83,30 +104,34 @@ function Navbar() {
                             </a>
 
                             <div className="navbar-dropdown">
-                                <a className="navbar-item">
-                                    Nueva Venta
+                                <Link to={`${process.env.PUBLIC_URL}/nueva-venta`}>
+                                    <a className="navbar-item">
+                                        Nueva Venta
                                 </a>
-                                <a className="navbar-item">
-                                    Ventas Generales
+                                </Link>
+                                <Link to={`${process.env.PUBLIC_URL}/ventas`}>
+                                    <a className="navbar-item">
+                                        Ventas Generales
                                 </a>
-
-                                <a className="navbar-item">
-                                    Ventas por Categoria
+                                </Link>
+                                <Link to={`${process.env.PUBLIC_URL}/ventas-desglosado`}>
+                                    <a className="navbar-item">
+                                        Ventas por Categoria
                                 </a>
+                                </Link>
                             </div>
                         </div>
 
-                        <a className="navbar-item">
-                            Balance General
-                        </a>
                     </div>
 
                     <div className="navbar-end">
                         <div className="navbar-item">
                             <div className="buttons">
-                                <a className="button is-link is-outlined">
-                                    Cerrar Sesión
-                                </a>
+                                <Link onClick={close} to={`${process.env.PUBLIC_URL}`}>
+                                    <a className="button is-link is-outlined">
+                                        Cerrar Sesión
+                                    </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
