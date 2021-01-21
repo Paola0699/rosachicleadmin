@@ -2,12 +2,14 @@ import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import firebase from '../../firebaseElements/firebase'
-
+import Swal from 'sweetalert2'
 
 function ProductCrud() {
+
   const db = firebase.firestore();
+  //states
   const [name, setName] = useState("")
   const [category, setCategory] = useState("")
   const [description, setDescription] = useState("")
@@ -15,11 +17,43 @@ function ProductCrud() {
   const [cost, setCost] = useState(0)
   const [price, setPrice] = useState(0)
   const [available, setAvailable] = useState(false)
+  const [newCategory, setNewCategory] = useState('')
+  const [categoriesList, setCategoriesList] = useState([])
 
-  const handleProductSubmit = async e => {
+  //refs
+  const categoryRef = useRef();
+  const nameRef = useRef();
+  const categorySelectRef = useRef();
+  const descriptionRef = useRef();
+  const calRef = useRef();
+  const costRef = useRef();
+  const priceRef = useRef();
+  const availableRef = useRef();
+
+  const fields = [
+    nameRef,
+    categorySelectRef,
+    descriptionRef,
+    calRef,
+    costRef,
+    priceRef
+  ]
+
+  useEffect(() => {
+    db.collection("categories").onSnapshot(doc => {
+      let allCategories = doc.docs.map(cat => {
+        return {
+          id: cat.id,
+          ...cat.data()
+        }
+      })
+      setCategoriesList(allCategories);
+    });
+  }, [])
+  const handleProductSubmit = e => {
     e.preventDefault();
     console.log(name, category, description, cal, cost, price, available)
-    await db.collection("products").add({
+       db.collection("products").add({
       name: name,
       category: category,
       description: description,
@@ -27,10 +61,58 @@ function ProductCrud() {
       cost: Number(cost),
       price: Number(price),
       available: available
+    }).then(() => {
+      fields.forEach(field=>field.current.value='')
+      availableRef.current.checked=false;
+      Swal.fire({
+        icon: 'success',
+        title: 'Creado',
+        text: `Producto agregado con exito!`,
+      })
+    }).catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `Ocurrio un error: ${error}`,
+      })
     })
-      console.log("Document successfully written!");
   }
-
+  const handleCategorySubmit = e => {
+    e.preventDefault();
+    categoryRef.current.value = '';
+    db.collection("categories").add({
+      name: newCategory,
+    }).then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Creada',
+        text: `¡Categoria agregada con exito!`,
+      })
+    }).catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `Ocurrio un error: ${error}`,
+      })
+    })
+  }
+  async function deleteCategory(cat) {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: `¿Seguro que quiere eliminar la categoria ${cat.name}?`,
+      showDenyButton: true,
+      confirmButtonText: `Si, eliminar`,
+      denyButtonText: `No`,
+    })
+    if (result.isConfirmed) {
+      db.collection("categories").doc(cat.id).delete().then(()=>{
+        Swal.fire('Categoria eliminada', '', 'success')
+      }).catch(error=> {
+        Swal.fire(`Ocurrio un error: ${error}`, '', 'error')
+      });
+      
+    }
+  }
   return (
     <div>
       <Navbar />
@@ -60,31 +142,28 @@ function ProductCrud() {
                 </header>
                 <div className="card-content">
                   <div className="content">
-                    <div className="field has-addons">
+                    <form onSubmit={handleCategorySubmit} className="field has-addons">
                       <div className="control is-expanded">
-                        <input className="input " type="text" placeholder="Nombre Categoría" />
-
+                        <input ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
                       </div>
                       <div className="control">
-                        <a className="button is-success">
+                        <button type="submit" value='submit' className="button is-success">
                           Crear Categoría
-                        </a>
+                        </button>
                       </div>
-                    </div>
+                    </form>
                     <br />
                     <table>
                       <tr>
                         <th>Nombre</th>
                         <th>Acciones</th>
                       </tr>
-                      <tr>
-                        <td>Juice</td>
-                        <td><button className="button is-success is-outlined is-small">Eliminar</button></td>
-                      </tr>
-                      <tr>
-                        <td>Smoothies</td>
-                        <td><button className="button is-success is-outlined is-small">Eliminar</button></td>
-                      </tr>
+                      {categoriesList.map(cat =>
+                        <tr key={cat.id}>
+                          <td> {cat.name} </td>
+                          <td><button onClick={() => deleteCategory(cat)} className="button is-success is-outlined is-small">Eliminar</button></td>
+                        </tr>
+                      )}
                     </table>
                   </div>
                 </div>
@@ -107,17 +186,18 @@ function ProductCrud() {
                     <div className="field">
                       <label className="label">Nombre</label>
                       <div className="control">
-                        <input onChange={e => setName(e.target.value)} className="input" type="text" placeholder="Nombre del producto" />
+                        <input ref={nameRef} onChange={e => setName(e.target.value)} className="input" type="text" placeholder="Nombre del producto" />
                       </div>
                     </div>
                     <div className="field">
                       <label className="label">Categoría</label>
                       <div className="control">
                         <div className="select is-fullwidth">
-                          <select onChange={e => setCategory(e.target.value)} >
-                            <option>Seleccione una categoría</option>
-                            <option>Juice</option>
-                            <option>Smoothies</option>
+                          <select ref={categorySelectRef} onChange={e =>  setCategory(e.target.value)} >
+                            <option selected disabled value='' >Seleccione una categoría</option>
+                            {categoriesList.map(cat=>
+                              <option key={cat.id} value={cat.name}> {cat.name} </option>
+                            )}
                           </select>
                         </div>
                       </div>
@@ -125,19 +205,19 @@ function ProductCrud() {
                     <div className="field">
                       <label className="label">Descripción</label>
                       <div className="control">
-                        <textarea onChange={e => setDescription(e.target.value)} className="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
+                        <textarea ref={descriptionRef} onChange={e => setDescription(e.target.value)} className="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
                       </div>
                     </div>
                     <div className="field">
                       <label className="label">Calorias</label>
                       <div className="control">
-                        <input onChange={e => setCal(e.target.value)} className="input" type="number" placeholder="Calorias del producto" />
+                        <input ref={calRef} onChange={e => setCal(e.target.value)} className="input" type="number" placeholder="Calorias del producto" />
                       </div>
                     </div>
                     <div className="field">
                       <label className="label">Costo de Producción</label>
                       <div className="control  has-icons-left">
-                        <input onChange={e => setCost(e.target.value)} className="input" type="number" />
+                        <input ref={costRef} onChange={e => setCost(e.target.value)} className="input" type="number" />
                         <span className="icon is-small is-left">
                           <FontAwesomeIcon icon={faDollarSign} />
                         </span>
@@ -146,14 +226,14 @@ function ProductCrud() {
                     <div className="field">
                       <label className="label">Precio de venta</label>
                       <div className="control  has-icons-left">
-                        <input onChange={e => setPrice(e.target.value)} className="input" type="number" />
+                        <input ref={priceRef} onChange={e => setPrice(e.target.value)} className="input" type="number" />
                         <span className="icon is-small is-left">
                           <FontAwesomeIcon icon={faDollarSign} />
                         </span>
                       </div>
                     </div>
                     <label className="checkbox">
-                      <input onChange={e => setAvailable(e.target.checked)} type="checkbox" />
+                      <input ref={availableRef} onChange={e => setAvailable(e.target.checked)} type="checkbox" />
                         Disponibilidad del Producto
                     </label>
                     <br />
