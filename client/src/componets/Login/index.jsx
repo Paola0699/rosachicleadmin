@@ -39,7 +39,7 @@ function Login() {
       if (user){
         //getUserType(user, setUserType)
         console.log(`Hay un user ${user.email}`)
-        setUserType(true)
+        setUserType(true)//teporal
       }
       else
         console.log('no user')
