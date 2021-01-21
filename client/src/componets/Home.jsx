@@ -11,7 +11,7 @@ import Sales from './saleCrud/sales'
 import Salescat from './saleCrud/salescat'
 import Balance from './generalbalance'
 import Newoutcome from './outcomesCrud/newoutcome'
-
+import Outcomes from './outcomesCrud/outcomes'
 const routes = [
   {
     path: "",
@@ -44,6 +44,10 @@ const routes = [
   {
     path: "alta-gasto",
     component: <Newoutcome/>,
+  },
+  {
+    path: "gastos",
+    component: <Outcomes/>,
   },
 
 ];
