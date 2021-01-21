@@ -42,7 +42,7 @@ function Balance() {
                         <table className='table' style={{ marginBottom: '2%', width: '100%' }}>
                             <tbody >
                                 <tr style={{ textAlign: 'center' }}>
-                                    <th colSpan='2'className='is-success'>GASTOS</th>
+                                    <th colSpan='2' className='is-success'>GASTOS</th>
                                     <th colSpan='2' className='is-info'>INGRESOS</th>
                                 </tr>
                                 <tr>
@@ -118,6 +118,24 @@ function Balance() {
                                     </td>
 
                                     <td >Polka Donuts</td>
+                                    <td >
+                                        <CurrencyFormat
+                                            decimalScale={2}
+                                            fixedDecimalScale={true}
+                                            value={250}
+                                            displayType={'text'}
+                                            thousandSeparator={true}
+                                            prefix={'$'}
+                                        />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td></td>
+                                    <td style={{ borderRight: '1px solid #dee2e6' }}>
+                                    </td>
+
+                                    <td >Otros Ingresos</td>
                                     <td >
                                         <CurrencyFormat
                                             decimalScale={2}

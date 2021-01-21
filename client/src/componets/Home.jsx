@@ -10,6 +10,8 @@ import Login from './Login'
 import Sales from './saleCrud/sales'
 import Salescat from './saleCrud/salescat'
 import Balance from './generalbalance'
+import Newoutcome from './outcomesCrud/newoutcome'
+
 const routes = [
   {
     path: "",
@@ -39,6 +41,11 @@ const routes = [
     path: "balance-general",
     component: <Balance/>,
   },
+  {
+    path: "alta-gasto",
+    component: <Newoutcome/>,
+  },
+
 ];
 
 function Home() {

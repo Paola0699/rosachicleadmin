@@ -8,7 +8,7 @@ function Navbar() {
             <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">
                     <a className="navbar-item" href="https://bulma.io">
-                        <img src={logo}/>
+                        <img src={logo} />
                     </a>
 
                     <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -20,10 +20,36 @@ function Navbar() {
 
                 <div id="navbarBasicExample" className="navbar-menu">
                     <div className="navbar-start">
-        
-                        <a className="navbar-item">
-                            Balance General
-                        </a>
+                        <div className="navbar-item has-dropdown is-hoverable">
+                            <a className="navbar-link">
+                                Productos
+                            </a>
+
+                            <div className="navbar-dropdown">
+                                <a className="navbar-item">
+                                    Nuevo Producto
+                                </a>
+                                <a className="navbar-item">
+                                    Todos los productos
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="navbar-item has-dropdown is-hoverable">
+                            <a className="navbar-link">
+                                Gastos e Ingresos
+                            </a>
+
+                            <div className="navbar-dropdown">
+                                <a className="navbar-item">
+                                    Alta de Gastos e Ingresos
+                                </a>
+                                <a className="navbar-item">
+                                    Consultar Gastos e Ingresos
+                                </a>
+                            </div>
+                        </div>
+
 
                         <div className="navbar-item has-dropdown is-hoverable">
                             <a className="navbar-link">
@@ -44,20 +70,9 @@ function Navbar() {
                             </div>
                         </div>
 
-                        <div className="navbar-item has-dropdown is-hoverable">
-                            <a className="navbar-link">
-                                Productos
-                            </a>
-
-                            <div className="navbar-dropdown">
-                                <a className="navbar-item">
-                                    Nuevo Producto
-                                </a>
-                                <a className="navbar-item">
-                                    Todos los productos
-                                </a>
-                            </div>
-                        </div>
+                        <a className="navbar-item">
+                            Balance General
+                        </a>
                     </div>
 
                     <div className="navbar-end">
