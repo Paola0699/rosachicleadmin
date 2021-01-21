@@ -11,5 +11,9 @@
         max-height: 100px;
       
     }
-    
+    @media screen and (max-width: 600px) {
+        .ocultar-div{
+        display:none;
+        }
+    }
 @import "bulma/bulma.sass";

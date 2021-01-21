@@ -138,12 +138,9 @@ function ProductCrud() {
                       <input type="checkbox" />
                         Disponibilidad del Producto
                     </label>
-
                     <br />
                     <br />
                     <button class="button is-success is-fullwidth">Crear Producto</button>
-
-
                   </div>
                 </div>
               </div>
