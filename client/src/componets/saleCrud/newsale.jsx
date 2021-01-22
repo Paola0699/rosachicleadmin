@@ -2,37 +2,79 @@ import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
+import { useEffect, useState } from 'react'
+import firebase from '../../firebaseElements/firebase'
+const db = firebase.firestore();
 
 function Newsale() {
+    const [categoriesList, setCategoriesList] = useState([])
+    const [productsList, setProductsList] = useState([])
+    const [filteredProductsList, setFilteredProductsList] = useState([])
+    const [orderProducts, setOrderProducts] = useState([])
+
+    useEffect(() => {
+        db.collection("products").onSnapshot(doc => {
+            let allProducts = doc.docs.map(product => {
+                return {
+                    id: product.id,
+                    ...product.data()
+                }
+            })
+            setProductsList(allProducts);
+            db.collection("categories").onSnapshot(doc => {
+                let allCategories = doc.docs.map(category => {
+                    return {
+                        id: category.id,
+                        ...category.data()
+                    }
+                })
+                setCategoriesList(allCategories);
+                setFilteredProductsList(allProducts.filter(product => product.category === allCategories[0].name))
+            });
+        });
+    }, [])
+    const filterProducts = filterBy => {
+        setFilteredProductsList(productsList.filter(product => product.category === filterBy))
+    }
+    const addProduct = product =>{
+        let i = orderProducts ? orderProducts.map(e => e.id).findIndex(ele => ele===product.id) : -1;
+        console.log('index',i)
+        if(i===-1){
+            let aux = orderProducts
+            aux.push(product)
+            console.log(aux)
+            setOrderProducts(aux)
+        }
+    }
     return (
         <div>
             <Navbar />
-            <section class="hero is-primary">
-                <div class="hero-body">
-                    <div class="container">
-                        <h1 class="title">Nueva Venta</h1>
-                        <h2 class="subtitle">Generar Venta</h2>
+            <section className="hero is-primary">
+                <div className="hero-body">
+                    <div className="container">
+                        <h1 className="title">Nueva Venta</h1>
+                        <h2 className="subtitle">Generar Venta</h2>
                         <Breadcrum />
                     </div>
                 </div>
             </section>
-            <section class="section">
-                <div class="container">
+            <section className="section">
+                <div className="container">
                     <div className='columns'>
                         <div className="column">
                             <label>Seleccione Categoría:</label>
-                            <div class="field has-addons">
-                                <div class="control is-expanded">
-                                    <div class="select is-fullwidth">
-                                        <select name="country">
-                                            <option value="Argentina">Juice</option>
-                                            <option value="Bolivia">Smoothies</option>
-                                            <option value="Brazil">Strongthies</option>
+                            <div className="field has-addons">
+                                <div className="control is-expanded">
+                                    <div className="select is-fullwidth">
+                                        <select onChange={e => filterProducts(e.target.value)} name="country">
+                                            {categoriesList.map(cat =>
+                                                <option key={cat.id} value={cat.name}> {cat.name} </option>
+                                            )}
                                         </select>
                                     </div>
                                 </div>
-                                <div class="control">
-                                    <button type="submit" class="button is-success">Seleccionar</button>
+                                <div className="control">
+                                    <button type="submit" className="button is-success">Seleccionar</button>
                                 </div>
                             </div>
                         </div>
@@ -41,29 +83,26 @@ function Newsale() {
                     <div className='columns'>
                         <div className="column">
                             <div className='card'>
-                                <header class="card-header">
-                                    <p class="card-header-title">
+                                <header className="card-header">
+                                    <p className="card-header-title">
                                         Productos de la  Categoría
                                     </p>
                                 </header>
-                                <div class="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
-                                    <div class="content">
+                                <div className="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
+                                    <div className="content">
                                         <table className="table is-hoverable">
                                             <tr>
                                                 <th>Producto</th>
                                                 <th>Descripción</th>
                                                 <th>Precio</th>
                                             </tr>
-                                            <tr>
-                                                <td>Vita - C</td>
-                                                <td>Naranja, Guayaba, Piña, Miel, Limón, Jengibre.</td>
-                                                <td>$40.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Verde</td>
-                                                <td>Espinaca, Pepino, Nopal, Apio, Perejil, Piña, Jengibre.</td>
-                                                <td>$40.00</td>
-                                            </tr>
+                                            {filteredProductsList.map(product =>
+                                                <tr onClick={()=>addProduct(product)} key={product.id}>
+                                                    <td>{product.name} </td>
+                                                    <td>{product.description} </td>
+                                                    <td> {product.price} </td>
+                                                </tr>
+                                            )}
                                         </table>
                                     </div>
                                 </div>
@@ -71,13 +110,13 @@ function Newsale() {
                         </div>
                         <div className="column">
                             <div className='card'>
-                                <header class="card-header">
-                                    <p class="card-header-title">
+                                <header className="card-header">
+                                    <p className="card-header-title">
                                         Productos en la Orden
                                     </p>
                                 </header>
-                                <div class="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
-                                    <div class="content">
+                                <div className="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
+                                    <div className="content">
                                         <table className="table is-hoverable">
                                             <tr>
                                                 <th>Producto</th>
@@ -86,36 +125,27 @@ function Newsale() {
                                                 <th>Precio Unitario</th>
                                                 <th>Total</th>
                                             </tr>
-                                            <tr>
-                                                <td>Vita - C</td>
-                                                <td>Naranja, Guayaba, Piña, Miel, Limón, Jengibre.</td>
-                                                <td><div style={{ display: 'flex' }}>
-                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '4px 0px 0px 4px' }}>-</button>
-                                                    <div style={{ display: 'flex', alignItems: 'center', padding: '.5rem .8rem', border: '1px solid rgb(221, 221, 221)' }}> 2 </div>
-                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '0px 4px 4px 0px' }}>+</button>
-                                                </div>
-                                                </td>
-                                                <td>$40.00</td>
-                                                <td>$80.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Verde</td>
-                                                <td>Espinaca, Pepino, Nopal, Apio, Perejil, Piña, Jengibre.</td>
-                                                <td><div style={{ display: 'flex' }}>
-                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '4px 0px 0px 4px' }}>-</button>
-                                                    <div style={{ display: 'flex', alignItems: 'center', padding: '.5rem .8rem', border: '1px solid rgb(221, 221, 221)' }}> 3 </div>
-                                                    <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '0px 4px 4px 0px' }}>+</button>
-                                                </div>
-                                                </td>
-                                                <td>$40.00</td>
-                                                <td>$120.00</td>
-                                            </tr>
+                                            {orderProducts.map(product =>
+                                                <tr key={product.id}>
+                                                    <td>{product.name} </td>
+                                                    <td>{product.description} </td>
+                                                    <td><div style={{ display: 'flex' }}>
+                                                        <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '4px 0px 0px 4px' }}>-</button>
+                                                        <div style={{ display: 'flex', alignItems: 'center', padding: '.5rem .8rem', border: '1px solid rgb(221, 221, 221)' }}> 2 </div>
+                                                        <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '0px 4px 4px 0px' }}>+</button>
+                                                    </div>
+                                                    </td>
+                                                    <td>{product.price} </td>
+                                                    <td>$80.00</td>
+                                                </tr>
+                                            )}
+
                                         </table>
 
                                     </div>
                                 </div>
                             </div>
-                            <br/>
+                            <br />
                             <button className='button is-success is-fullwidth'>CONFIRMAR ORDEN</button>
                         </div>
                     </div>
