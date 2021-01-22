@@ -1,9 +1,11 @@
 import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
-
-const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
-const columns = [
+import { useState, useEffect } from 'react'
+import firebase from '../../firebaseElements/firebase'
+import memoize from 'memoize-one';
+import Swal from 'sweetalert2'
+const columns = memoize((deleteProduct) => [
     {
         name: 'Producto',
         selector: 'name',
@@ -11,32 +13,31 @@ const columns = [
     },
     {
         name: 'Categoría',
-        selector: 'cathegory',
+        selector: 'category',
         sortable: true,
         right: true,
     },
-
     {
         name: 'Costo',
-        selector: 'year',
+        selector: 'cost',
         sortable: true,
         right: true,
     },
-
     {
         name: 'Precio',
-        selector: 'year',
+        selector: 'price',
         sortable: true,
         right: true,
     },
-
     {
         name: 'Acciones',
-        selector: 'year',
-        cell: row => <div className='is-flex'><button className='button is-success' style={{ marginRight: '2%' }}>Detalles</button><button className='button is-success is-outlined'>Eliminar</button></div>,
+        cell: row => <div className='is-flex'>
+            <button className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>
+            <button onClick={() => deleteProduct(row)} className='button is-success is-outlined'>Eliminar</button>
+        </div>,
         right: true,
-    },
-];
+    }
+]);
 
 const customStyles = {
     header: {
@@ -90,8 +91,59 @@ const customStyles = {
     },
 };
 
+const db = firebase.firestore();
+
+const deleteProduct = async product => {
+    console.log(product.id)
+    const result = await Swal.fire({
+        icon: "warning",
+        title: `¿Seguro que quiere eliminar${product.name}?`,
+        showDenyButton: true,
+        confirmButtonText: `Si, eliminar`,
+        denyButtonText: `No`,
+    })
+    if (result.isConfirmed) {
+        db.collection("products").doc(product.id).delete().then(() => {
+            Swal.fire('Producto eliminado', '', 'success')
+        }).catch(error => {
+            Swal.fire(`Ocurrio un error: ${error}`, '', 'error')
+        });
+
+    }
+}
 
 function Products() {
+    const [productsList, setProductsList] = useState([])
+    const [filteredProductsList, setFilteredProductsList] = useState([])
+    const [categoriesList, setCategoriesList] = useState([])
+    useEffect(() => {
+        db.collection("products").onSnapshot(doc => {
+            let allProducts = doc.docs.map(product => {
+                return {
+                    id: product.id,
+                    ...product.data()
+                }
+            })
+            setProductsList(allProducts);
+            setFilteredProductsList(allProducts);
+        });
+        db.collection("categories").onSnapshot(doc => {
+            let allCategories = doc.docs.map(category => {
+                return {
+                    id: category.id,
+                    ...category.data()
+                }
+            })
+            setCategoriesList(allCategories);
+
+        });
+    }, [])
+    const filterProducts = filterBy =>{
+        if(filterBy)
+            setFilteredProductsList(productsList.filter(product=>product.category===filterBy))
+        else
+            setFilteredProductsList(productsList)
+    }
     return (
         <div>
             <Navbar />
@@ -112,10 +164,11 @@ function Products() {
                             <div className="field has-addons">
                                 <div className="control is-expanded">
                                     <div className="select is-fullwidth">
-                                        <select name="country">
-                                            <option value="Argentina">Juice</option>
-                                            <option value="Bolivia">Smoothies</option>
-                                            <option value="Brazil">Strongthies</option>
+                                        <select onChange={e=>filterProducts(e.target.value)} name="country">
+                                            <option selected value='' >Todos los productos</option>
+                                            {categoriesList.map(cat=>
+                                                <option key={cat.id} value={cat.name}> {cat.name} </option>
+                                            )}
                                         </select>
                                     </div>
                                 </div>
@@ -127,8 +180,8 @@ function Products() {
                         </div>
                     </div>
                     <DataTable
-                        columns={columns}
-                        data={data}
+                        columns={columns(deleteProduct)}
+                        data={filteredProductsList}
                         pagination={true}
                         customStyles={customStyles}
                         paginationComponentOptions={{ rowsPerPageText: 'Filas por pagina:', rangeSeparatorText: 'de' }}
