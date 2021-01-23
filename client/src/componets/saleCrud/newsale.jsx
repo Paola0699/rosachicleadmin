@@ -5,12 +5,29 @@ import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import firebase from '../../firebaseElements/firebase'
 const db = firebase.firestore();
+const quantityButtonStyle = {
+    backgroundColor: 'transparent',
+    border: '1px solid #ddd',
+    padding: '.5rem .8rem',
+    fontWeight: '900',
+    borderRadius: '4px 0px 0px 4px'
+}
+const productQuantityStyle = { 
+    display: 'flex', 
+    alignItems: 'center', 
+    padding: '.5rem .8rem', 
+    border: '1px solid rgb(221, 221, 221)' }
+function useForceUpdate() {
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => value + 1); // update the state to force render
+}
 
 function Newsale() {
     const [categoriesList, setCategoriesList] = useState([])
     const [productsList, setProductsList] = useState([])
     const [filteredProductsList, setFilteredProductsList] = useState([])
     const [orderProducts, setOrderProducts] = useState([])
+    const forceUpdate = useForceUpdate();
 
     useEffect(() => {
         db.collection("products").onSnapshot(doc => {
@@ -36,15 +53,35 @@ function Newsale() {
     const filterProducts = filterBy => {
         setFilteredProductsList(productsList.filter(product => product.category === filterBy))
     }
-    const addProduct = product =>{
-        let i = orderProducts ? orderProducts.map(e => e.id).findIndex(ele => ele===product.id) : -1;
-        console.log('index',i)
-        if(i===-1){
-            let aux = orderProducts
-            aux.push(product)
-            console.log(aux)
-            setOrderProducts(aux)
-        }
+    const addProduct = product => {
+        const i = orderProducts ? orderProducts.map(e => e.id).findIndex(ele => ele === product.id) : -1;
+        let aux = orderProducts
+        if (i === -1)
+            aux.push({ quantity: 1, ...product })
+        else
+            aux[i].quantity++;
+        //console.log(aux)
+        setOrderProducts(aux)
+        forceUpdate()
+    }
+    const moreProduct = product => {
+        const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id);
+        let aux = orderProducts
+        aux[i].quantity++;
+        //console.log(aux)
+        setOrderProducts(aux)
+        forceUpdate()
+    }
+    const lessProduct = product => {
+        const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id);
+        let aux = orderProducts
+        if (product.quantity === 1)
+            aux.splice(i, 1)
+        else
+            aux[i].quantity--;
+        //console.log(aux)
+        setOrderProducts(aux)
+        forceUpdate()
     }
     return (
         <div>
@@ -73,9 +110,9 @@ function Newsale() {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="control">
+                                {/* <div className="control">
                                     <button type="submit" className="button is-success">Seleccionar</button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -97,7 +134,7 @@ function Newsale() {
                                                 <th>Precio</th>
                                             </tr>
                                             {filteredProductsList.map(product =>
-                                                <tr onClick={()=>addProduct(product)} key={product.id}>
+                                                <tr onClick={() => addProduct(product)} key={product.id}>
                                                     <td>{product.name} </td>
                                                     <td>{product.description} </td>
                                                     <td> {product.price} </td>
@@ -130,18 +167,15 @@ function Newsale() {
                                                     <td>{product.name} </td>
                                                     <td>{product.description} </td>
                                                     <td><div style={{ display: 'flex' }}>
-                                                        <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '4px 0px 0px 4px' }}>-</button>
-                                                        <div style={{ display: 'flex', alignItems: 'center', padding: '.5rem .8rem', border: '1px solid rgb(221, 221, 221)' }}> 2 </div>
-                                                        <button style={{ backgroundColor: 'transparent', border: '1px solid #ddd', padding: '.5rem .8rem', fontWeight: '900', borderRadius: '0px 4px 4px 0px' }}>+</button>
+                                                        <button onClick={() => lessProduct(product)} style={quantityButtonStyle}>-</button>
+                                                        <div style={productQuantityStyle}> {product.quantity} </div>
+                                                        <button onClick={() => moreProduct(product)} style={quantityButtonStyle}>+</button>
                                                     </div>
                                                     </td>
                                                     <td>{product.price} </td>
-                                                    <td>$80.00</td>
-                                                </tr>
-                                            )}
-
+                                                    <td>{product.price*product.quantity}</td>
+                                                </tr>)}
                                         </table>
-
                                     </div>
                                 </div>
                             </div>
