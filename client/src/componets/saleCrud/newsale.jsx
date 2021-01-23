@@ -53,35 +53,35 @@ function Newsale() {
     const filterProducts = filterBy => {
         setFilteredProductsList(productsList.filter(product => product.category === filterBy))
     }
+    function getCurrentOrderProducts(product){
+        const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id) ;
+        let aux = orderProducts.map(e=>e) 
+        return [i,aux];
+    }
     const addProduct = product => {
-        const i = orderProducts ? orderProducts.map(e => e.id).findIndex(ele => ele === product.id) : -1;
-        let aux = orderProducts
+        let [i,aux] = getCurrentOrderProducts(product)
         if (i === -1)
             aux.push({ quantity: 1, ...product })
         else
             aux[i].quantity++;
-        //console.log(aux)
         setOrderProducts(aux)
-        forceUpdate()
     }
     const moreProduct = product => {
-        const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id);
-        let aux = orderProducts
+        let [i,aux] = getCurrentOrderProducts(product)
         aux[i].quantity++;
         //console.log(aux)
         setOrderProducts(aux)
-        forceUpdate()
+        //forceUpdate()
     }
     const lessProduct = product => {
-        const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id);
-        let aux = orderProducts
+        let [i,aux] = getCurrentOrderProducts(product)
         if (product.quantity === 1)
             aux.splice(i, 1)
         else
             aux[i].quantity--;
         //console.log(aux)
         setOrderProducts(aux)
-        forceUpdate()
+        //forceUpdate()
     }
     return (
         <div>
