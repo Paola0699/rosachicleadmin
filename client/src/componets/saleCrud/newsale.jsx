@@ -31,9 +31,6 @@ function Newsale() {
     const [orderProducts, setOrderProducts] = useState([])
     const [open, setOpen] = useState(false);
     const [payMethod,setPayMethod] = useState('cash')
-    const cash = useRef(null);
-    const debit = useRef(null);
-    const credit = useRef(null);
 
     useEffect(() => {
         db.collection("products").onSnapshot(doc => {
@@ -59,7 +56,7 @@ function Newsale() {
     const filterProducts = filterBy => {
         setFilteredProductsList(productsList.filter(product => product.category === filterBy))
     }
-    function getCurrentOrderProducts(product) {
+    const getCurrentOrderProducts = product=>{
         const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id);
         let aux = orderProducts.map(e => e)
         return [i, aux];
