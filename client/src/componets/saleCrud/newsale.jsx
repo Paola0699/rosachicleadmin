@@ -101,42 +101,9 @@ function Newsale() {
                 cancelButtonColor: '#bdbdbd ',
                 confirmButtonText: 'Si',
                 cancelButtonText: 'No'
-            })/* .then((result) => {
-                if (result.value) {
-                    let products = JSON.parse(localStorage.getItem('orderProducts'))
-                    let paymethod
-                    paymethod = cash.current.checked ? 'Efectivo' : paymethod
-                    paymethod = debit.current.checked ? 'Tarjeta de debito' : paymethod
-                    paymethod = credit.current.checked ? 'Tarjeta de credito' : paymethod
-
-
-                    let order = {
-                        car: carWord + carNumber,
-                        paymethod: paymethod,
-                        date: firebase.firestore.Timestamp.now(),
-                        pending: true,
-                        waiter: this.state.waiter,
-                        toprint: true
-                    }
-                    if (tips.current)
-                        order.tips = Number(tips.current.innerText);
-                    order.products = products;
-                    db.doc('orders').collection('orders').add(order)
-                    switchOff()
-                    close()
-                    localStorage.removeItem('orderProducts')
-                    reload()
-                    Swal.fire(
-                        '¡Ordenado!',
-                        'La orden está siendo preparada',
-                        'success'
-                    )
-                    this.setState({
-                        verifyCar: 0,
-                        verifyRow: 0
-                    })
-                }
-            }) */
+            }).then(result => {
+                setOrderOnDB(result)
+            }) 
         }  else {
             Swal.fire({
                 title: '¿El cobro fue correcto?',
@@ -147,43 +114,44 @@ function Newsale() {
                 cancelButtonColor: '#bdbdbd ',
                 confirmButtonText: 'Si',
                 cancelButtonText: 'No'
-            })/* .then((result) => {
-                if (result.value) {
-                    let products = JSON.parse(localStorage.getItem('orderProducts'))
-                    let paymethod
-                    paymethod = cash.current.checked ? 'Efectivo' : paymethod
-                    paymethod = debit.current.checked ? 'Tarjeta de debito' : paymethod
-                    paymethod = credit.current.checked ? 'Tarjeta de credito' : paymethod
-                    let order = {
-                        car: carWord + carNumber,
-                        paymethod: paymethod,
-                        date: firebase.firestore.Timestamp.now(),
-                        pending: true,
-                        waiter: this.state.waiter,
-                        toprint: true
-                    }
-                    if (tips.current)
-                        order.tips = Number(tips.current.innerText);
-                    order.products = products;
-                    db.doc('orders').collection('orders').add(order)
-                    switchOff()
-                    close()
-                    localStorage.removeItem('orderProducts')
-                    reload()
-                    Swal.fire(
-                        '¡Ordenado!',
-                        'La orden esta siendo preparada',
-                        'success'
-                    )
-                    this.setState({
-                        verifyCar: 0,
-                        verifyRow: 0
-                    })
-                }
-            })  */
+            }).then(result => {
+                setOrderOnDB(result)
+            }) 
 
         }
     } 
+    const setOrderOnDB = result=>{
+            if (result.value) {
+                let order = {
+                    paymethod: payMethod,
+                    date: firebase.firestore.Timestamp.now(),
+                    toprint: true,
+                    products: orderProducts.map(product=>{
+                        return {
+                            name: product.name,
+                            price: product.price,
+                            quantity: product.quantity,
+                            id: product.id
+                        }
+                    })
+                }
+                db.collection('orders').add(order).then(()=>{
+                    Swal.fire(
+                        '¡Ordenado!',
+                        'La orden está siendo preparada',
+                        'success'
+                    )
+                    setOrderProducts([]);
+                }).catch(error =>
+                    Swal.fire(
+                        'Error!',
+                        `Ocurrio un error: ${error}`,
+                        'warning'
+                    )
+                );
+                setOpen(false);
+            }
+    }
     return (<>
         <div>
             <Navbar />
