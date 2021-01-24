@@ -1,9 +1,46 @@
 import Navbar from "./common/navbar"
 import Breadcrum from "./common/breadcrum"
 import CurrencyFormat from 'react-currency-format';
+import { useEffect, useState } from "react";
+import firebase from '../firebaseElements/firebase'
 
+const db = firebase.firestore();
 
 function Balance() {
+    const [startDate, setStartDate] = useState('');
+    const [finalDate, setFinalDate] = useState('');
+
+    useEffect(() => {
+        getAllData()
+        console.log('effect')
+    },[startDate,finalDate])
+
+    const getAllData = async () => {
+        if (startDate && finalDate) {
+            const querySnapshot = await db.collection("orders")
+                .where('date', '>', toDate(startDate, 0, 0, 0))
+                .where('date', '<=', toDate(finalDate, 23, 59, 59))
+                .get()
+
+            const orders = querySnapshot.docs.map(sale => {
+                return {
+                    id: sale.id,
+                    ...sale.data(),
+                    total: totalOrder(sale.data().products)
+                }
+            })
+           
+        }
+    }
+    const totalOrder = products => {
+        const reducer = (accumulator, product) => accumulator + (product.quantity * product.price);
+        return products.reduce(reducer, 0)
+    }
+    const toDate = (text, h, m, s) => {
+        const dataAux = text.split('-')
+        const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
+        return firebase.firestore.Timestamp.fromDate(temDate)
+    }
     return (
         <div>
             <Navbar />
@@ -23,7 +60,7 @@ function Balance() {
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
-                                    <input class="input" type="date" placeholder="Nombre del producto" />
+                                    <input onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -31,7 +68,7 @@ function Balance() {
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
-                                    <input class="input" type="date" placeholder="Nombre del producto" />
+                                    <input onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
