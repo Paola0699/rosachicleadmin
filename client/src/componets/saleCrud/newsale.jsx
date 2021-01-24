@@ -16,10 +16,7 @@ const productQuantityStyle = {
     display: 'flex', 
     alignItems: 'center', 
     padding: '.5rem .8rem', 
-    border: '1px solid rgb(221, 221, 221)' }
-function useForceUpdate() {
-    const [value, setValue] = useState(0); // integer state
-    return () => setValue(value => value + 1); // update the state to force render
+    border: '1px solid rgb(221, 221, 221)' 
 }
 
 function Newsale() {
@@ -27,7 +24,6 @@ function Newsale() {
     const [productsList, setProductsList] = useState([])
     const [filteredProductsList, setFilteredProductsList] = useState([])
     const [orderProducts, setOrderProducts] = useState([])
-    const forceUpdate = useForceUpdate();
 
     useEffect(() => {
         db.collection("products").onSnapshot(doc => {
@@ -54,7 +50,7 @@ function Newsale() {
         setFilteredProductsList(productsList.filter(product => product.category === filterBy))
     }
     function getCurrentOrderProducts(product){
-        const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id) ;
+        const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id);
         let aux = orderProducts.map(e=>e) 
         return [i,aux];
     }
@@ -69,9 +65,7 @@ function Newsale() {
     const moreProduct = product => {
         let [i,aux] = getCurrentOrderProducts(product)
         aux[i].quantity++;
-        //console.log(aux)
         setOrderProducts(aux)
-        //forceUpdate()
     }
     const lessProduct = product => {
         let [i,aux] = getCurrentOrderProducts(product)
@@ -79,9 +73,7 @@ function Newsale() {
             aux.splice(i, 1)
         else
             aux[i].quantity--;
-        //console.log(aux)
         setOrderProducts(aux)
-        //forceUpdate()
     }
     return (
         <div>
@@ -180,7 +172,7 @@ function Newsale() {
                                 </div>
                             </div>
                             <br />
-                            <button className='button is-success is-fullwidth'>CONFIRMAR ORDEN</button>
+                            <button disabled={orderProducts.length>0 ? false : true} className='button is-success is-fullwidth'>CONFIRMAR ORDEN</button>
                         </div>
                     </div>
                 </div>
