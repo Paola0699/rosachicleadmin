@@ -2,32 +2,37 @@ import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import CurrencyFormat from 'react-currency-format';
+import { useEffect, useState } from "react";
+import firebase from '../../firebaseElements/firebase'
 
-
-const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
+const db = firebase.firestore();
 const columns = [
     {
         name: 'Folio',
-        selector: 'name',
+        selector: 'id',
         sortable: true,
     },
     {
         name: 'Fecha',
-        selector: 'cathegory',
+        cell: row => row.date.toDate().toLocaleString('es-MX', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        }),
         sortable: true,
         right: true,
     },
 
     {
         name: 'Monto',
-        selector: 'year',
+        selector: 'total',
         sortable: true,
         right: true,
     },
 
     {
         name: 'Detalles',
-        selector: 'year',
         cell: row => <div className='is-flex'><button className='button is-success' style={{ marginRight: '2%' }}>Detalles</button></div>,
         right: true,
     },
@@ -85,7 +90,55 @@ const customStyles = {
     },
 };
 
+
+
 function Sales() {
+    const [startDate, setStartDate] = useState('');
+    const [finalDate, setFinalDate] = useState('');
+    const [salesResume, setSalesResume] = useState('');
+    const [totalCash, setTotalCash] = useState(0);
+    const [totalDebit, setTotalDebit] = useState(0);
+    const [totalCredit, setTotalCredit] = useState(0);
+
+    useEffect(() => {
+        getAllData()
+        console.log('effect')
+    },[startDate,finalDate])
+
+    const getAllData = async () => {
+        if (startDate && finalDate) {
+            const querySnapshot = await db.collection("orders")
+                .where('date', '>', toDate(startDate, 0, 0, 0))
+                .where('date', '<=', toDate(finalDate, 23, 59, 59))
+                .get()
+
+            const orders = querySnapshot.docs.map(sale => {
+                return {
+                    id: sale.id,
+                    ...sale.data(),
+                    total: totalOrder(sale.data().products)
+                }
+            })
+            setTotalCash(setTotalByPaymethod(orders,'cash'))
+            setTotalDebit(setTotalByPaymethod(orders,'debit'))
+            setTotalCredit(setTotalByPaymethod(orders,'credit'))
+            setSalesResume(orders)
+        }
+    }
+    const setTotalByPaymethod = (orders,paymethod )=>{
+        const reducer = (accumulator, order) => accumulator + totalOrder(order.products);
+        return orders.filter(order => order.paymethod === paymethod).reduce(reducer, 0);
+    }
+    const totalOrder = products => {
+        const reducer = (accumulator, product) => accumulator + (product.quantity * product.price);
+        return products.reduce(reducer, 0)
+    }
+
+    const toDate = (text, h, m, s) => {
+        const dataAux = text.split('-')
+        const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
+        return firebase.firestore.Timestamp.fromDate(temDate)
+    }
     return (
         <div>
             <Navbar />
@@ -105,7 +158,7 @@ function Sales() {
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
-                                    <input class="input" type="date" placeholder="Nombre del producto" />
+                                    <input onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -113,7 +166,7 @@ function Sales() {
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
-                                    <input class="input" type="date" placeholder="Nombre del producto" />
+                                    <input onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -128,17 +181,17 @@ function Sales() {
                                 <th className='is-success'><small>Total </small><br />Ventas</th>
                             </tr>
                             <tr>
-                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={125} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
-                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={200} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
-                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
-                                <td><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={100} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalCash} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalCredit} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalDebit} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
+                                <td><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalCash+totalCredit+totalDebit} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
                             </tr>
                         </table>
                     </div>
 
                     <DataTable
                         columns={columns}
-                        data={data}
+                        data={salesResume}
                         pagination={true}
                         customStyles={customStyles}
                         paginationComponentOptions={{ rowsPerPageText: 'Filas por pagina:', rangeSeparatorText: 'de' }}
