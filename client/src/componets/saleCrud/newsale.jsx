@@ -127,8 +127,10 @@ function Newsale() {
                         return {
                             name: product.name,
                             price: product.price,
+                            cost: product.cost,
                             quantity: product.quantity,
-                            id: product.id
+                            id: product.id,
+                            category: product.category
                         }
                     })
                 }
