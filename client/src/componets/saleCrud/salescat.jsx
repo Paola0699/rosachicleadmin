@@ -5,6 +5,7 @@ import CurrencyFormat from 'react-currency-format';
 import { useEffect, useState } from "react";
 import firebase from '../../firebaseElements/firebase'
 
+
 const db = firebase.firestore();
 
 
@@ -222,6 +223,7 @@ function Salescat() {
                     />
                 </div>
             </section>
+          
         </div>
     )
 }

@@ -4,9 +4,11 @@ import DataTable from 'react-data-table-component';
 import CurrencyFormat from 'react-currency-format';
 import { useEffect, useState } from "react";
 import firebase from '../../firebaseElements/firebase'
-
+import { Modal } from 'react-responsive-modal'
+import memoize from 'memoize-one';
+import 'react-responsive-modal/styles.css';
 const db = firebase.firestore();
-const columns = [
+const columns = memoize((details,setDetails) =>[
     {
         name: 'Folio',
         selector: 'id',
@@ -33,10 +35,10 @@ const columns = [
 
     {
         name: 'Detalles',
-        cell: row => <div className='is-flex'><button className='button is-success' style={{ marginRight: '2%' }}>Detalles</button></div>,
+        cell: row => <div className='is-flex'><button onClick={()=>{details(true); setDetails(row)}} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button></div>,
         right: true,
     },
-];
+]);
 
 const customStyles = {
     header: {
@@ -99,6 +101,8 @@ function Sales() {
     const [totalCash, setTotalCash] = useState(0);
     const [totalDebit, setTotalDebit] = useState(0);
     const [totalCredit, setTotalCredit] = useState(0);
+    const [open, setOpen] = useState(false);
+    const [orderDetail, setorderDetail] = useState();
 
     useEffect(() => {
         getAllData()
@@ -190,7 +194,7 @@ function Sales() {
                     </div>
 
                     <DataTable
-                        columns={columns}
+                        columns={columns(setOpen,setorderDetail)}
                         data={salesResume}
                         pagination={true}
                         customStyles={customStyles}
@@ -198,6 +202,37 @@ function Sales() {
                     />
                 </div>
             </section>
+           {orderDetail ? <Modal open={open} onClose={() => setOpen(false)} center >
+            <div className="modal-header">
+                <h5 className="modal-title f-w-600" id="exampleModalLabel2"> {orderDetail.id} </h5>
+            </div>
+            <div className="modal-body">
+            <br/>
+            total: {orderDetail.total}
+            <br/>
+            {orderDetail.date.toDate().toLocaleString('es-MX', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })}-----
+        {orderDetail.products.map(product=>
+           <div>
+               id: {product.id} <br/>
+               name: {product.name} <br/>
+               quantity: {product.quantity} <br/>
+               price: {product.price} <br/>
+
+
+
+           </div>
+        )}
+
+            </div>
+            <div className="modal-footer">
+                
+            </div>
+        </Modal>: null}
         </div>
     )
 }
