@@ -7,7 +7,10 @@ import Swal from 'sweetalert2'
 import { Modal } from 'react-responsive-modal'
 import memoize from 'memoize-one';
 import 'react-responsive-modal/styles.css';
-const columns = memoize((deleteProduct,seOrder,modal) => [
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
+
+const columns = memoize((deleteProduct, seOrder, modal) => [
     {
         name: 'Producto',
         selector: 'name',
@@ -34,7 +37,7 @@ const columns = memoize((deleteProduct,seOrder,modal) => [
     {
         name: 'Acciones',
         cell: row => <div className='is-flex'>
-            <button onClick={()=>{modal(true); seOrder(row)}} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>
+            <button onClick={() => { modal(true); seOrder(row) }} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>
             <button onClick={() => deleteProduct(row)} className='button is-success is-outlined'>Eliminar</button>
         </div>,
         right: true,
@@ -143,9 +146,9 @@ function Products() {
 
         });
     }, [])
-    const filterProducts = filterBy =>{
-        if(filterBy)
-            setFilteredProductsList(productsList.filter(product=>product.category===filterBy))
+    const filterProducts = filterBy => {
+        if (filterBy)
+            setFilteredProductsList(productsList.filter(product => product.category === filterBy))
         else
             setFilteredProductsList(productsList)
     }
@@ -169,9 +172,9 @@ function Products() {
                             <div className="field has-addons">
                                 <div className="control is-expanded">
                                     <div className="select is-fullwidth">
-                                        <select onChange={e=>filterProducts(e.target.value)} name="country">
+                                        <select onChange={e => filterProducts(e.target.value)} name="country">
                                             <option selected value='' >Todos los productos</option>
-                                            {categoriesList.map(cat=>
+                                            {categoriesList.map(cat =>
                                                 <option key={cat.id} value={cat.name}> {cat.name} </option>
                                             )}
                                         </select>
@@ -185,7 +188,7 @@ function Products() {
                         </div>
                     </div>
                     <DataTable
-                        columns={columns(deleteProduct,setorderDetail,setOpen)}
+                        columns={columns(deleteProduct, setorderDetail, setOpen)}
                         data={filteredProductsList}
                         pagination={true}
                         customStyles={customStyles}
@@ -193,27 +196,60 @@ function Products() {
                     />
                 </div>
             </section>
-            {orderDetail ? <Modal open={open} onClose={() => setOpen(false)} center >
-            <div className="modal-header">
-                <h5 className="modal-title f-w-600" id="exampleModalLabel2"> id: {orderDetail.id} </h5>
-            </div>
-            <div className="modal-body">
-            <br/>
-            name: {orderDetail.name}
-            <br/>
-            precio: {orderDetail.price}
-            <br/>
-            category: {orderDetail.category}
-            <br/>
-            cost: {orderDetail.cost}
-            <br/>
-            description: {orderDetail.description}
-            </div>
-            <div className="modal-footer">
-                
-            </div>
-        </Modal>: null}
-        </div>
+            {orderDetail ? <Modal open={open} onClose={() => setOpen(false)} center className="modal">
+                <div style={{padding:'2.8rem'}}>
+                    <h1 class="title">Producto: {orderDetail.name}</h1>
+                    <h2 class="subtitle">Categoría: {orderDetail.category}</h2>
+                  
+                    <div className="field">
+                      <label className="label">Calorias</label>
+                      <div className="control">
+                        <input  className="input" type="number" placeholder="Calorias del producto" value={orderDetail.cal} />
+                      </div>
+                    </div>
+
+                    <div className="field">
+                      <label className="label">Costo de Producción</label>
+                      <div className="control  has-icons-left">
+                        <input value={orderDetail.cost} className="input" type="number" />
+                        <span className="icon is-small is-left">
+                          <FontAwesomeIcon icon={faDollarSign} />
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="field">
+                      <label className="label">Precio de Venta</label>
+                      <div className="control  has-icons-left">
+                        <input value={orderDetail.price} className="input" type="number" />
+                        <span className="icon is-small is-left">
+                          <FontAwesomeIcon icon={faDollarSign} />
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="field">
+                      <label className="label">Descripción</label>
+                      <div className="control">
+                        <textarea value={orderDetail.description} className="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
+                      </div>
+                    </div>
+
+                    <label className="checkbox">
+                      <input type="checkbox" />
+                        Disponibilidad del Producto
+                    </label>
+                    <br />
+                    <br />
+                    <button type="submit" value="Submit" className="button is-success is-fullwidth">Editar Producto</button>
+                </div>
+
+                <div className="modal-footer">
+
+                </div>
+            </Modal> : null
+            }
+        </div >
     )
 }
 export default Products;
