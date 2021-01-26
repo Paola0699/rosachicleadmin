@@ -3474,6 +3474,11 @@ body-parser@1.19.0:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
+body-scroll-lock@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-3.1.5.tgz#c1392d9217ed2c3e237fee1e910f6cdd80b7aaec"
+  integrity sha512-Yi1Xaml0EvNA0OYWxXiYNqY24AfWkbA6w5vxE7GWxtKfzIbZM+Qw+aSmkgsbWzbHiy/RCSkUZBplVxTA+E4jJg==
+
 bonjour@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bonjour/-/bonjour-3.5.0.tgz#8e890a183d8ee9a2393b3844c691a42bcf7bc9f5"
@@ -3971,6 +3976,11 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+classnames@^2.2.6:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
 
 clean-css@^4.2.3:
   version "4.2.3"
@@ -4844,11 +4854,6 @@ detect-port-alt@1.1.6:
   dependencies:
     address "^1.0.1"
     debug "^2.6.0"
-
-dialog-polyfill@^0.4.7:
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/dialog-polyfill/-/dialog-polyfill-0.4.10.tgz#c4ea68a0deed4abb59a6a2a025c548b278cd532e"
-  integrity sha512-j5yGMkP8T00UFgyO+78OxiN5vC5dzRQF3BEio+LhNvDbyfxWBsi3sfPArDm54VloaJwy2hm3erEiDWqHRC8rzw==
 
 diff-sequences@^26.6.2:
   version "26.6.2"
@@ -5897,14 +5902,6 @@ firebase@^8.2.3:
     "@firebase/remote-config" "0.1.30"
     "@firebase/storage" "0.4.2"
     "@firebase/util" "0.3.4"
-
-firebaseui@^4.1.0:
-  version "4.7.1"
-  resolved "https://registry.yarnpkg.com/firebaseui/-/firebaseui-4.7.1.tgz#8e0303d9f733e16b0bfbfa24001ab8bd4bc98038"
-  integrity sha512-wDdo3LLnh9sV1dDKyNgn4M7cKecILosvqvtQE1SUum/R+eXLdN1q1ZRKZ2Lp6ZyP0XDAHrotssS4vJNh4OdwuQ==
-  dependencies:
-    dialog-polyfill "^0.4.7"
-    material-design-lite "^1.2.0"
 
 flat-cache@^3.0.4:
   version "3.0.4"
@@ -8224,11 +8221,6 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-material-design-lite@^1.2.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/material-design-lite/-/material-design-lite-1.3.0.tgz#d004ce3fee99a1eeb74a78b8a325134a5f1171d3"
-  integrity sha1-0ATOP+6Zoe63Sni4oyUTSl8RcdM=
-
 md5.js@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/md5.js/-/md5.js-1.3.5.tgz#b5d07b8e3216e3e27cd728d72f70d1e6a342005f"
@@ -8247,6 +8239,11 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
+
+memoize-one@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
+  integrity sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==
 
 memory-fs@^0.4.1:
   version "0.4.1"
@@ -10456,13 +10453,6 @@ react-fast-compare@^3.1.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
 
-react-firebaseui@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/react-firebaseui/-/react-firebaseui-4.1.0.tgz#fbd8381432b53b58ce56ee86df81e2a6e40af7b6"
-  integrity sha512-Y5pAom+W6/R5xZeF4xdvYiP7tObo7GDGWra1Pf2td+FxhtXtGQXQTKdW5Rs4js5zIuN0A3fApZzO+3sa1MHl9Q==
-  dependencies:
-    firebaseui "^4.1.0"
-
 react-helmet@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-helmet/-/react-helmet-6.1.0.tgz#a750d5165cb13cf213e44747502652e794468726"
@@ -10496,6 +10486,14 @@ react-refresh@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
+
+react-responsive-modal@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/react-responsive-modal/-/react-responsive-modal-6.0.1.tgz#d27ecf5c4689e57f611297282cae89e00638874e"
+  integrity sha512-9p1qPhs9C3G3l3zA2E9yCImZ/99AmdQu0WIbiE6/rLehsdiPsMQP7RyhySy7RHanTbpPZp5dRQt7iEJMFk5z6Q==
+  dependencies:
+    body-scroll-lock "^3.1.5"
+    classnames "^2.2.6"
 
 react-router-dom@^5.2.0:
   version "5.2.0"
@@ -12059,6 +12057,11 @@ svgo@^1.0.0, svgo@^1.2.2:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+sweetalert2@^10.13.0:
+  version "10.13.0"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-10.13.0.tgz#fd3c25ae511c36608d205aa020214508641ebd45"
+  integrity sha512-kF6Pnr7s7GDqVYRqqgyfxvG5vlUqfP+j+JF7oZ7DOs0/35jg6sTu8hyi6oD6Rb3fIKWIf1S9mCU7wR8iKa7dAA==
 
 symbol-tree@^3.2.4:
   version "3.2.4"

@@ -1,7 +1,10 @@
 import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
+import firebase from '../../firebaseElements/firebase'
+import { useEffect, useState } from "react";
 
+const db = firebase.firestore();
 
 const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
 const columns = [
