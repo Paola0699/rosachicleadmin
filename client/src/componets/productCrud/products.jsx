@@ -3,9 +3,11 @@ import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react'
 import firebase from '../../firebaseElements/firebase'
-import memoize from 'memoize-one';
 import Swal from 'sweetalert2'
-const columns = memoize((deleteProduct) => [
+import { Modal } from 'react-responsive-modal'
+import memoize from 'memoize-one';
+import 'react-responsive-modal/styles.css';
+const columns = memoize((deleteProduct,seOrder,modal) => [
     {
         name: 'Producto',
         selector: 'name',
@@ -32,7 +34,7 @@ const columns = memoize((deleteProduct) => [
     {
         name: 'Acciones',
         cell: row => <div className='is-flex'>
-            <button className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>
+            <button onClick={()=>{modal(true); seOrder(row)}} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>
             <button onClick={() => deleteProduct(row)} className='button is-success is-outlined'>Eliminar</button>
         </div>,
         right: true,
@@ -116,6 +118,9 @@ function Products() {
     const [productsList, setProductsList] = useState([])
     const [filteredProductsList, setFilteredProductsList] = useState([])
     const [categoriesList, setCategoriesList] = useState([])
+    const [orderDetail, setorderDetail] = useState();
+    const [open, setOpen] = useState(false);
+
     useEffect(() => {
         db.collection("products").onSnapshot(doc => {
             let allProducts = doc.docs.map(product => {
@@ -180,7 +185,7 @@ function Products() {
                         </div>
                     </div>
                     <DataTable
-                        columns={columns(deleteProduct)}
+                        columns={columns(deleteProduct,setorderDetail,setOpen)}
                         data={filteredProductsList}
                         pagination={true}
                         customStyles={customStyles}
@@ -188,7 +193,26 @@ function Products() {
                     />
                 </div>
             </section>
-
+            {orderDetail ? <Modal open={open} onClose={() => setOpen(false)} center >
+            <div className="modal-header">
+                <h5 className="modal-title f-w-600" id="exampleModalLabel2"> id: {orderDetail.id} </h5>
+            </div>
+            <div className="modal-body">
+            <br/>
+            name: {orderDetail.name}
+            <br/>
+            precio: {orderDetail.price}
+            <br/>
+            category: {orderDetail.category}
+            <br/>
+            cost: {orderDetail.cost}
+            <br/>
+            description: {orderDetail.description}
+            </div>
+            <div className="modal-footer">
+                
+            </div>
+        </Modal>: null}
         </div>
     )
 }
