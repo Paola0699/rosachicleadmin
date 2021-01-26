@@ -3,26 +3,33 @@ import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import firebase from '../../firebaseElements/firebase'
 import { useEffect, useState } from "react";
-
+import { Modal } from 'react-responsive-modal'
+import memoize from 'memoize-one';
+import 'react-responsive-modal/styles.css';
 const db = firebase.firestore();
 
 const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
-const columns = [
+const columns = memoize((modal, outcome) => [
     {
         name: 'Concepto',
-        selector: 'name',
+        selector: 'concept',
         sortable: true,
     },
     {
         name: 'Fecha',
-        selector: 'cathegory',
+        cell: row => row.date.toDate().toLocaleString('es-MX', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        }),
         sortable: true,
         right: true,
     },
 
     {
         name: 'Importe',
-        selector: 'year',
+        selector: 'quantity',
         sortable: true,
         right: true,
     },
@@ -36,11 +43,11 @@ const columns = [
     {
         name: 'Detalles',
         selector: 'year',
-        cell: row => <button className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>,
+        cell: row => <button onClick={() => { modal(true); outcome(row) }} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>,
         right: true,
     },
 
-];
+]);
 
 const customStyles = {
     header: {
@@ -96,6 +103,46 @@ const customStyles = {
 
 
 function Outcomes() {
+
+    const [outcome, setOutcome] = useState();
+    const [open, setOpen] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [finalDate, setFinalDate] = useState('');
+    const [kind, setKind] = useState('');
+    const [outcomes, setOutcomes] = useState([]);
+
+
+    useEffect(() => {
+        getAllData()
+        console.log('effect')
+    }, [startDate, finalDate, kind])
+
+    const toDate = (text, h, m, s) => {
+        const dataAux = text.split('-')
+        const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
+        return firebase.firestore.Timestamp.fromDate(temDate)
+    }
+
+    const getAllData = async () => {
+        if (startDate && finalDate && kind) {
+
+            console.log('get data')
+            const querySnapshot = await db.collection("outcomes")
+                .where('kind', '==', kind)
+                .where('date', '>', toDate(startDate, 0, 0, 0))
+                .where('date', '<=', toDate(finalDate, 23, 59, 59))
+                .get()
+            console.log(querySnapshot.docs)
+            const temOutcomes = querySnapshot.docs.map(sale => {
+                return {
+                    id: sale.id,
+                    ...sale.data()
+                }
+            })
+            setOutcomes(temOutcomes)
+
+        }
+    }
     return (
         <div>
             <Navbar />
@@ -116,10 +163,10 @@ function Outcomes() {
                                 <label class="label">Gastos / Ingresos</label>
                                 <div class="control">
                                     <div class="select is-fullwidth">
-                                        <select>
-                                            <option>Seleccione concepto</option>
-                                            <option>Gastos</option>
-                                            <option>Ingresos</option>
+                                        <select onChange={e => setKind(e.target.value)}  >
+                                            <option selected disabled>Seleccione concepto</option>
+                                            <option value='Gasto'>Gastos</option>
+                                            <option value='Ingreso'>Ingresos</option>
                                         </select>
                                     </div>
                                 </div>
@@ -131,7 +178,7 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
-                                    <input class="input" type="date" placeholder="Nombre del producto" />
+                                    <input onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -139,21 +186,41 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
-                                    <input class="input" type="date" placeholder="Nombre del producto" />
+                                    <input onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <DataTable
-                        columns={columns}
-                        data={data}
+                        columns={columns(setOpen, setOutcome)}
+                        data={outcomes}
                         pagination={true}
                         customStyles={customStyles}
                         paginationComponentOptions={{ rowsPerPageText: 'Filas por pagina:', rangeSeparatorText: 'de' }}
                     />
                 </div>
             </section>
+            {outcome ? <Modal open={open} onClose={() => setOpen(false)} center >
+                <div className="modal-header">
+                    <h5 className="modal-title f-w-600" id="exampleModalLabel2"> id: {outcome.id} </h5>
+                </div>
+                <div className="modal-body">
+                    <br />
+                    concept: {outcome.concept}
+                    <br />
+                    monto: {outcome.quantity}
+                    <br />
+                    responsable: {outcome.responsable}
+                    <br />
+                    authorizer: {outcome.authorizer}
+                    <br />
+                    <img src={outcome.ticketImg} alt="ticketImg" />
+                </div>
+                <div className="modal-footer">
+
+                </div>
+            </Modal> : null}
         </div>
     )
 }
