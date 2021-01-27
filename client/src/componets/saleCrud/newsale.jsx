@@ -1,7 +1,5 @@
 import Navbar from "../common/navbar"
 import Breadcrum from "../common/breadcrum"
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-//import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useRef, useState } from 'react'
 import firebase from '../../firebaseElements/firebase'
 import { Modal } from 'react-responsive-modal'
@@ -30,7 +28,7 @@ function Newsale() {
     const [filteredProductsList, setFilteredProductsList] = useState([])
     const [orderProducts, setOrderProducts] = useState([])
     const [open, setOpen] = useState(false);
-    const [payMethod,setPayMethod] = useState('cash')
+    const [payMethod, setPayMethod] = useState('cash')
 
     useEffect(() => {
         db.collection("products").onSnapshot(doc => {
@@ -56,7 +54,7 @@ function Newsale() {
     const filterProducts = filterBy => {
         setFilteredProductsList(productsList.filter(product => product.category === filterBy))
     }
-    const getCurrentOrderProducts = product=>{
+    const getCurrentOrderProducts = product => {
         const i = orderProducts.map(e => e.id).findIndex(ele => ele === product.id);
         let aux = orderProducts.map(e => e)
         return [i, aux];
@@ -82,12 +80,12 @@ function Newsale() {
             aux[i].quantity--;
         setOrderProducts(aux)
     }
-    const totalOrder = ()=>{
-        const reducer = (accumulator, product) => accumulator + (product.quantity*product.price);
-        return orderProducts.reduce(reducer,0)
+    const totalOrder = () => {
+        const reducer = (accumulator, product) => accumulator + (product.quantity * product.price);
+        return orderProducts.reduce(reducer, 0)
     }
-     const order = ()=>{
-        if (payMethod === 'debit' ||payMethod === 'credit') {
+    const order = () => {
+        if (payMethod === 'debit' || payMethod === 'credit') {
             console.log('handeled')
             Swal.fire({
                 title: '¿Pasó la tarjeta?',
@@ -100,8 +98,8 @@ function Newsale() {
                 cancelButtonText: 'No'
             }).then(result => {
                 setOrderOnDB(result)
-            }) 
-        }  else {
+            })
+        } else {
             Swal.fire({
                 title: '¿El cobro fue correcto?',
                 text: "Confirma el cobro antes de registrar la compra",
@@ -113,43 +111,43 @@ function Newsale() {
                 cancelButtonText: 'No'
             }).then(result => {
                 setOrderOnDB(result)
-            }) 
+            })
 
         }
-    } 
-    const setOrderOnDB = result=>{
-            if (result.value) {
-                let order = {
-                    paymethod: payMethod,
-                    date: firebase.firestore.Timestamp.now(),
-                    toprint: true,
-                    products: orderProducts.map(product=>{
-                        return {
-                            name: product.name,
-                            price: product.price,
-                            cost: product.cost,
-                            quantity: product.quantity,
-                            id: product.id,
-                            category: product.category
-                        }
-                    })
-                }
-                db.collection('orders').add(order).then(()=>{
-                    Swal.fire(
-                        '¡Ordenado!',
-                        'La orden está siendo preparada',
-                        'success'
-                    )
-                    setOrderProducts([]);
-                }).catch(error =>
-                    Swal.fire(
-                        'Error!',
-                        `Ocurrio un error: ${error}`,
-                        'warning'
-                    )
-                );
-                setOpen(false);
+    }
+    const setOrderOnDB = result => {
+        if (result.value) {
+            let order = {
+                paymethod: payMethod,
+                date: firebase.firestore.Timestamp.now(),
+                toprint: true,
+                products: orderProducts.map(product => {
+                    return {
+                        name: product.name,
+                        price: product.price,
+                        cost: product.cost,
+                        quantity: product.quantity,
+                        id: product.id,
+                        category: product.category
+                    }
+                })
             }
+            db.collection('orders').add(order).then(() => {
+                Swal.fire(
+                    '¡Ordenado!',
+                    'La orden está siendo preparada',
+                    'success'
+                )
+                setOrderProducts([]);
+            }).catch(error =>
+                Swal.fire(
+                    'Error!',
+                    `Ocurrio un error: ${error}`,
+                    'warning'
+                )
+            );
+            setOpen(false);
+        }
     }
     return (<>
         <div>
@@ -205,7 +203,9 @@ function Newsale() {
                                                 <tr onClick={() => addProduct(product)} key={product.id}>
                                                     <td>{product.name} </td>
                                                     <td>{product.description} </td>
-                                                    <td> {product.price} </td>
+                                                    <td>  <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                        value={product.price} displayType={'text'} thousandSeparator={true}
+                                                        prefix={'$'} /></td>
                                                 </tr>
                                             )}
                                         </table>
@@ -241,14 +241,14 @@ function Newsale() {
                                                     </div>
                                                     </td>
                                                     <td>
-                                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true} 
-                                                        value={product.price} displayType={'text'} thousandSeparator={true} 
-                                                        prefix={'$'} />
+                                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                            value={product.price} displayType={'text'} thousandSeparator={true}
+                                                            prefix={'$'} />
                                                     </td>
                                                     <td>
-                                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true} 
-                                                        value={product.price*product.quantity} displayType={'text'} thousandSeparator={true} 
-                                                        prefix={'$'} />
+                                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                            value={product.price * product.quantity} displayType={'text'} thousandSeparator={true}
+                                                            prefix={'$'} />
                                                     </td>
                                                 </tr>)}
                                         </table>
@@ -263,78 +263,84 @@ function Newsale() {
             </section>
         </div>
         <Modal open={open} onClose={() => setOpen(false)} center >
-            <div className="modal-header">
-                <h5 className="modal-title f-w-600" id="exampleModalLabel2">Confirmar orden</h5>
-            </div>
-            <div className="modal-body">
-                <br />
-                <div className="user-status table-responsive products-table">
-                    <table className="table table-bordernone mb-0">
-                        <thead>
-                            <tr>
-                                <th scope="col">Cantidad</th>
-                                <th scope="col">Producto</th>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Precio Unitario</th>
-                                <th scope="col">Total</th>
-                            </tr>
-                        </thead>
-                        {orderProducts.map(product =>
-                            <tr key={product.id}>
-                                <td>{product.quantity} </td>
-                                <td>{product.name} </td>
-                                <td>{product.description} </td>
-                                <td>
-                                    <CurrencyFormat decimalScale={2} fixedDecimalScale={true} 
-                                    value={product.price} displayType={'text'} thousandSeparator={true} 
-                                    prefix={'$'} />
-                                </td>
-                                <td>
-                                    <CurrencyFormat decimalScale={2} fixedDecimalScale={true} 
-                                    value={product.price*product.quantity} displayType={'text'} thousandSeparator={true} 
-                                    prefix={'$'} />
-                                </td>
-                            </tr>
-                        )}
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Total a pagar</td>
-                            <td>
-                                <CurrencyFormat decimalScale={2} fixedDecimalScale={true} 
-                                value={totalOrder()} displayType={'text'} thousandSeparator={true} 
-                                prefix={'$'} />
-                            </td>
-                        </tr>
-                        <tbody>
-                        </tbody>
-                    </table>
+            <div style={{ padding: '2.5rem' }}>
+                <div className="modal-header">
+                    <h1 class="title">Confirmar Orden</h1>
+                    <h2 class="subtitle">Confirmación de la orden</h2>
                 </div>
-                <div>
-                    <div className="row" style={{ /* backgroundColor: '#f5f5f5', */ padding: '3%', marginTop: '4%' }}>
-                        <div className='col'><b>Forma de pago</b></div>
-                        <div className="col" >
-                            <label className="d-block" >
-                                <input onChange={()=>setPayMethod('cash')}  className="radio_animated" id="edo-ani3" type="radio" name="rdo-ani2" defaultChecked />Efectivo
+                <div className="modal-body">
+                    <br />
+                    <div className="user-status table-responsive products-table">
+                        <table className="table table-bordernone mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Cantidad</th>
+                                    <th scope="col">Producto</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Precio Unitario</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            {orderProducts.map(product =>
+                                <tr key={product.id}>
+                                    <td>{product.quantity} </td>
+                                    <td>{product.name} </td>
+                                    <td>{product.description} </td>
+                                    <td>
+                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                            value={product.price} displayType={'text'} thousandSeparator={true}
+                                            prefix={'$'} />
+                                    </td>
+                                    <td>
+                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                            value={product.price * product.quantity} displayType={'text'} thousandSeparator={true}
+                                            prefix={'$'} />
+                                    </td>
+                                </tr>
+                            )}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td className='is-success'>Total a pagar</td>
+                                <td className='is-success'>
+                                    <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                        value={totalOrder()} displayType={'text'} thousandSeparator={true}
+                                        prefix={'$'} />
+                                </td>
+                            </tr>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div className="row" style={{ /* backgroundColor: '#f5f5f5', */ padding: '3%', marginTop: '4%' }}>
+                            <div className='col'><b>Método de pago</b></div>
+                            <div className='columns'>
+                                <div className="column" >
+                                    <label className="d-block" >
+                                        <input onChange={() => setPayMethod('cash')} className="radio_animated" id="edo-ani3" type="radio" name="rdo-ani2" defaultChecked />Efectivo
                             </label>
-                        </div>
-                        <div className="col" >
-                            <label className="d-block">
-                                <input onChange={()=>setPayMethod('debit')}  className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" />Tarjeta de debito
+                                </div>
+                                <div className="column" >
+                                    <label className="d-block">
+                                        <input onChange={() => setPayMethod('debit')} className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" />Tarjeta de debito
                             </label>
-                        </div>
-                        <div className="col" >
-                            <label className="d-block">
-                                <input onChange={()=>setPayMethod('credit')} className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" /> Tarjeta de credito
+                                </div>
+                                <div className="column" >
+                                    <label className="d-block">
+                                        <input onChange={() => setPayMethod('credit')} className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" /> Tarjeta de credito
                             </label>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="modal-footer">
-                <button onClick={order} className="button" style={{ backgroundColor: '#e91e63 ', color: 'white' }}>Ordenar</button>
-                <button className="button" onClick={() => setOpen(false)}>Cancelar</button>
+                <div className="modal-footer">
+                    <button onClick={order} className="button is-success">Ordenar</button>
+                    <button className="button" onClick={() => setOpen(false)}>Cancelar</button>
+                </div>
             </div>
         </Modal>
     </>)
