@@ -1,11 +1,10 @@
-function Breadcrum() {
+function Breadcrum(props) {
+    const { parent, children} = props;
     return (
         <nav className="breadcrumb is-small" aria-label="breadcrumbs">
             <ul>
-                <li><a href="#">Bulma</a></li>
-                <li><a href="#">Documentation</a></li>
-                <li><a href="#">Components</a></li>
-                <li className="is-active"><a href="#" aria-current="page">Breadcrumb</a></li>
+                <li><a href="#">{parent}</a></li>
+                <li className="is-active"><a href="#">{children}</a></li>
             </ul>
         </nav>
     )

@@ -182,7 +182,7 @@ function Salescat() {
                     <div class="container">
                         <h1 class="title">Ventas por Categoría</h1>
                         <h2 class="subtitle">Consulta las ventas por categoría</h2>
-                        <Breadcrum />
+                        <Breadcrum  parent='Ventas' children='Ventas por Categoría' />
                     </div>
                 </div>
             </section>

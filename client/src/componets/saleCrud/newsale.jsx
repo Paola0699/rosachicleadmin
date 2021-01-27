@@ -157,7 +157,7 @@ function Newsale() {
                     <div className="container">
                         <h1 className="title">Nueva Venta</h1>
                         <h2 className="subtitle">Generar Venta</h2>
-                        <Breadcrum />
+                        <Breadcrum parent='Ventas' children='Nueva Venta' />
                     </div>
                 </div>
             </section>

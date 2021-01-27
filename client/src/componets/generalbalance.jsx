@@ -49,7 +49,7 @@ function Balance() {
                     <div class="container">
                         <h1 class="title">Balance General </h1>
                         <h2 class="subtitle">Consulta la relación entre gastos e ingresos.</h2>
-                        <Breadcrum />
+                        <Breadcrum parent='Gastos e Ingresos' children='Balance General'  />
                     </div>
                 </div>
             </section>

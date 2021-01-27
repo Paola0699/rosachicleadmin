@@ -159,7 +159,7 @@ function Sales() {
                     <div class="container">
                         <h1 class="title">Ventas Generales</h1>
                         <h2 class="subtitle">Consulta las ventas generales</h2>
-                        <Breadcrum />
+                        <Breadcrum parent='Ventas' children='Ventas Generales' />
                     </div>
                 </div>
             </section>

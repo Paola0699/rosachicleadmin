@@ -177,7 +177,7 @@ function Products() {
                     <div className="container">
                         <h1 className="title">Productos</h1>
                         <h2 className="subtitle">Todos los Productos</h2>
-                        <Breadcrum />
+                        <Breadcrum parent='Productos' children='Todos los Productos' />
                     </div>
                 </div>
             </section>

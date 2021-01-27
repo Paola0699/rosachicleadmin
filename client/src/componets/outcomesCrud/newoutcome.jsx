@@ -95,7 +95,7 @@ function Newoutcome() {
                     <div class="container">
                         <h1 class="title">Nuevo Gasto</h1>
                         <h2 class="subtitle">Dar de alta un nuevo gasto o ingreso</h2>
-                        <Breadcrum />
+                        <Breadcrum  parent='Gastos e Ingresos' children='Nuevo Gasto' />
                     </div>
                 </div>
             </section>

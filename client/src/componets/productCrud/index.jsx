@@ -121,7 +121,7 @@ function ProductCrud() {
           <div className="container">
             <h1 className="title">Nuevo Producto</h1>
             <h2 className="subtitle">Alta de Productos</h2>
-            <Breadcrum />
+            <Breadcrum parent='Productos' children='Nuevo Producto' />
           </div>
         </div>
       </section>

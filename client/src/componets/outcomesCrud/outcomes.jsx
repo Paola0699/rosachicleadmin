@@ -159,7 +159,7 @@ function Outcomes() {
                     <div class="container">
                         <h1 class="title">Gastos e Ingresos</h1>
                         <h2 class="subtitle">Consulta los gastos e ingresos del periodo</h2>
-                        <Breadcrum />
+                        <Breadcrum parent='Gastos e Ingresos' children='Consultar Gastos e Ingresos'  />
                     </div>
                 </div>
             </section>
