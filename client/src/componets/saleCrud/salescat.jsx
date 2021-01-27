@@ -34,8 +34,31 @@ const columns = [
     },
 
     {
-        name: 'Monto',
-        cell: row => row.price *row.quantity,
+        name: 'Precio Unitario',
+        selector: row => row.price,
+        cell: row => <CurrencyFormat
+            decimalScale={2}
+            fixedDecimalScale={true}
+            value={row.price}
+            displayType={'text'}
+            thousandSeparator={true}
+            prefix={'$'}
+        />,
+        sortable: true,
+        right: true,
+    },
+
+    {
+        name: 'Monto Total',
+        selector: row => row.price *row.quantity,
+        cell: row => <CurrencyFormat
+            decimalScale={2}
+            fixedDecimalScale={true}
+            value={row.price *row.quantity}
+            displayType={'text'}
+            thousandSeparator={true}
+            prefix={'$'}
+        />,
         sortable: true,
         right: true,
     },
