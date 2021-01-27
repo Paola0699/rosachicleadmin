@@ -53,7 +53,7 @@ function ProductCrud() {
   const handleProductSubmit = e => {
     e.preventDefault();
     console.log(name, category, description, cal, cost, price, available)
-       db.collection("products").add({
+    db.collection("products").add({
       name: name,
       category: category,
       description: description,
@@ -62,8 +62,8 @@ function ProductCrud() {
       price: Number(price),
       available: available
     }).then(() => {
-      fields.forEach(field=>field.current.value='')
-      availableRef.current.checked=false;
+      fields.forEach(field => field.current.value = '')
+      availableRef.current.checked = false;
       Swal.fire({
         icon: 'success',
         title: 'Creado',
@@ -105,12 +105,12 @@ function ProductCrud() {
       denyButtonText: `No`,
     })
     if (result.isConfirmed) {
-      db.collection("categories").doc(cat.id).delete().then(()=>{
+      db.collection("categories").doc(cat.id).delete().then(() => {
         Swal.fire('Categoria eliminada', '', 'success')
-      }).catch(error=> {
+      }).catch(error => {
         Swal.fire(`Ocurrio un error: ${error}`, '', 'error')
       });
-      
+
     }
   }
   return (
@@ -142,15 +142,20 @@ function ProductCrud() {
                 </header>
                 <div className="card-content">
                   <div className="content">
-                    <form onSubmit={handleCategorySubmit} className="field has-addons">
-                      <div className="control is-expanded">
-                        <input ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
+                    <form onSubmit={handleCategorySubmit}>
+                      <div className="field">
+                        <label className="label">Nombre Categoría</label>
+                        <div className="control">
+                          <input ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
+                        </div>
                       </div>
-                      <div className="control">
-                        <button type="submit" value='submit' className="button is-success">
-                          Crear Categoría
-                        </button>
-                      </div>
+                      <label class="checkbox">
+                        <input type="checkbox" />
+                          Proveedor Externo
+                      </label>
+                      <button type="submit" value='submit' className="button is-success is-fullwidth">
+                        Crear Categoría
+                      </button>
                     </form>
                     <br />
                     <table>
@@ -193,9 +198,9 @@ function ProductCrud() {
                       <label className="label">Categoría</label>
                       <div className="control">
                         <div className="select is-fullwidth">
-                          <select ref={categorySelectRef} onChange={e =>  setCategory(e.target.value)} >
+                          <select ref={categorySelectRef} onChange={e => setCategory(e.target.value)} >
                             <option selected disabled value='' >Seleccione una categoría</option>
-                            {categoriesList.map(cat=>
+                            {categoriesList.map(cat =>
                               <option key={cat.id} value={cat.name}> {cat.name} </option>
                             )}
                           </select>
