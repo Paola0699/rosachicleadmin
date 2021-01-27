@@ -6,8 +6,10 @@ import { useEffect, useState } from "react";
 import { Modal } from 'react-responsive-modal'
 import memoize from 'memoize-one';
 import 'react-responsive-modal/styles.css';
-const db = firebase.firestore();
+import CurrencyFormat from 'react-currency-format';
 
+
+const db = firebase.firestore();
 const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
 const columns = memoize((modal, outcome) => [
     {
@@ -29,9 +31,15 @@ const columns = memoize((modal, outcome) => [
 
     {
         name: 'Importe',
-        selector: 'quantity',
-        sortable: true,
-        right: true,
+        selector: row => row.quantity,
+        cell: row => <CurrencyFormat
+            decimalScale={2}
+            fixedDecimalScale={true}
+            value={row.quantity}
+            displayType={'text'}
+            thousandSeparator={true}
+            prefix={'$'}
+        />,
     },
 
     {
@@ -202,23 +210,32 @@ function Outcomes() {
                 </div>
             </section>
             {outcome ? <Modal open={open} onClose={() => setOpen(false)} center >
-                <div className="modal-header">
-                    <h5 className="modal-title f-w-600" id="exampleModalLabel2"> id: {outcome.id} </h5>
-                </div>
-                <div className="modal-body">
-                    <br />
-                    concept: {outcome.concept}
-                    <br />
-                    monto: {outcome.quantity}
-                    <br />
-                    responsable: {outcome.responsable}
-                    <br />
-                    authorizer: {outcome.authorizer}
-                    <br />
-                    <img src={outcome.ticketImg} alt="ticketImg" />
-                </div>
-                <div className="modal-footer">
+                <div style={{ padding: '2.8rem' }}>
+                    <h2 class="subtitle"> {outcome.id}</h2>
+                    <h1 class="title"><small>Concepto:</small> {outcome.concept}</h1>
+                    <br/>
+                    <h3 class="subtitle is-size-6"> <b>Descripción: </b> {outcome.description}</h3>
+                    <h3 class="subtitle is-size-6"> <b>Fecha: </b> {outcome.date.toDate().toLocaleString('es-MX', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    })}</h3>
+                    <h3 class="subtitle is-size-6"> <b>Importe: </b><CurrencyFormat
+                        decimalScale={2}
+                        fixedDecimalScale={true}
+                        value={outcome.quantity}
+                        displayType={'text'}
+                        thousandSeparator={true}
+                        prefix={'$'}
+                    /></h3>
+                    <h3 class="subtitle is-size-6"> <b>Método de pago/cobro: </b> {outcome.paymethod}</h3>
+                    <h3 class="subtitle is-size-6"> <b>Responsable: </b> {outcome.responsable}</h3>
+                    <h3 class="subtitle is-size-6"> <b>Autoriza: </b> {outcome.authorizer}</h3>
+                    <img style={{ width: '25rem' }} src={outcome.ticketImg} alt="ticketImg" />x
+                    <div className="modal-footer">
 
+                    </div>
                 </div>
             </Modal> : null}
         </div>
