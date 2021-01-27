@@ -9,6 +9,7 @@ import memoize from 'memoize-one';
 import 'react-responsive-modal/styles.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
+import CurrencyFormat from 'react-currency-format';
 
 const columns = memoize((deleteProduct, seOrder, modal) => [
     {
@@ -24,13 +25,29 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
     },
     {
         name: 'Costo',
-        selector: 'cost',
+        selector: row => row.cost,
+        cell: row => <CurrencyFormat
+            decimalScale={2}
+            fixedDecimalScale={true}
+            value={row.cost}
+            displayType={'text'}
+            thousandSeparator={true}
+            prefix={'$'}
+        />,
         sortable: true,
         right: true,
     },
     {
         name: 'Precio',
-        selector: 'price',
+        selector: row => row.price,
+        cell: row => <CurrencyFormat
+            decimalScale={2}
+            fixedDecimalScale={true}
+            value={row.price}
+            displayType={'text'}
+            thousandSeparator={true}
+            prefix={'$'}
+        />,
         sortable: true,
         right: true,
     },
@@ -197,46 +214,46 @@ function Products() {
                 </div>
             </section>
             {orderDetail ? <Modal open={open} onClose={() => setOpen(false)} center className="modal">
-                <div style={{padding:'2.8rem'}}>
+                <div style={{ padding: '2.8rem' }}>
                     <h1 class="title">Producto: {orderDetail.name}</h1>
                     <h2 class="subtitle">Categoría: {orderDetail.category}</h2>
-                  
+
                     <div className="field">
-                      <label className="label">Calorias</label>
-                      <div className="control">
-                        <input  className="input" type="number" placeholder="Calorias del producto" value={orderDetail.cal} />
-                      </div>
+                        <label className="label">Calorias</label>
+                        <div className="control">
+                            <input className="input" type="number" placeholder="Calorias del producto" value={orderDetail.cal} />
+                        </div>
                     </div>
 
                     <div className="field">
-                      <label className="label">Costo de Producción</label>
-                      <div className="control  has-icons-left">
-                        <input value={orderDetail.cost} className="input" type="number" />
-                        <span className="icon is-small is-left">
-                          <FontAwesomeIcon icon={faDollarSign} />
-                        </span>
-                      </div>
+                        <label className="label">Costo de Producción</label>
+                        <div className="control  has-icons-left">
+                            <input value={orderDetail.cost} className="input" type="number" />
+                            <span className="icon is-small is-left">
+                                <FontAwesomeIcon icon={faDollarSign} />
+                            </span>
+                        </div>
                     </div>
 
                     <div className="field">
-                      <label className="label">Precio de Venta</label>
-                      <div className="control  has-icons-left">
-                        <input value={orderDetail.price} className="input" type="number" />
-                        <span className="icon is-small is-left">
-                          <FontAwesomeIcon icon={faDollarSign} />
-                        </span>
-                      </div>
+                        <label className="label">Precio de Venta</label>
+                        <div className="control  has-icons-left">
+                            <input value={orderDetail.price} className="input" type="number" />
+                            <span className="icon is-small is-left">
+                                <FontAwesomeIcon icon={faDollarSign} />
+                            </span>
+                        </div>
                     </div>
 
                     <div className="field">
-                      <label className="label">Descripción</label>
-                      <div className="control">
-                        <textarea value={orderDetail.description} className="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
-                      </div>
+                        <label className="label">Descripción</label>
+                        <div className="control">
+                            <textarea value={orderDetail.description} className="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
+                        </div>
                     </div>
 
                     <label className="checkbox">
-                      <input type="checkbox" />
+                        <input type="checkbox" />
                         Disponibilidad del Producto
                     </label>
                     <br />

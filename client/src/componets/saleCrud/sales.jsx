@@ -8,7 +8,7 @@ import { Modal } from 'react-responsive-modal'
 import memoize from 'memoize-one';
 import 'react-responsive-modal/styles.css';
 const db = firebase.firestore();
-const columns = memoize((details,setDetails) =>[
+const columns = memoize((details, setDetails) => [
     {
         name: 'Folio',
         selector: 'id',
@@ -28,14 +28,22 @@ const columns = memoize((details,setDetails) =>[
 
     {
         name: 'Monto',
-        selector: 'total',
+        selector: row => row.total,
+        cell: row => <CurrencyFormat
+            decimalScale={2}
+            fixedDecimalScale={true}
+            value={row.total}
+            displayType={'text'}
+            thousandSeparator={true}
+            prefix={'$'}
+        />,
         sortable: true,
         right: true,
     },
 
     {
         name: 'Detalles',
-        cell: row => <div className='is-flex'><button onClick={()=>{details(true); setDetails(row)}} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button></div>,
+        cell: row => <div className='is-flex'><button onClick={() => { details(true); setDetails(row) }} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button></div>,
         right: true,
     },
 ]);
@@ -107,7 +115,7 @@ function Sales() {
     useEffect(() => {
         getAllData()
         console.log('effect')
-    },[startDate,finalDate])
+    }, [startDate, finalDate])
 
     const getAllData = async () => {
         if (startDate && finalDate) {
@@ -123,13 +131,13 @@ function Sales() {
                     total: totalOrder(sale.data().products)
                 }
             })
-            setTotalCash(setTotalByPaymethod(orders,'cash'))
-            setTotalDebit(setTotalByPaymethod(orders,'debit'))
-            setTotalCredit(setTotalByPaymethod(orders,'credit'))
+            setTotalCash(setTotalByPaymethod(orders, 'cash'))
+            setTotalDebit(setTotalByPaymethod(orders, 'debit'))
+            setTotalCredit(setTotalByPaymethod(orders, 'credit'))
             setSalesResume(orders)
         }
     }
-    const setTotalByPaymethod = (orders,paymethod )=>{
+    const setTotalByPaymethod = (orders, paymethod) => {
         const reducer = (accumulator, order) => accumulator + totalOrder(order.products);
         return orders.filter(order => order.paymethod === paymethod).reduce(reducer, 0);
     }
@@ -188,13 +196,13 @@ function Sales() {
                                 <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalCash} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
                                 <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalCredit} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
                                 <td className='ocultar-div'><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalDebit} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
-                                <td><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalCash+totalCredit+totalDebit} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
+                                <td><b style={{ fontSize: '1.1rem' }}><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalCash + totalCredit + totalDebit} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b></td>
                             </tr>
                         </table>
                     </div>
 
                     <DataTable
-                        columns={columns(setOpen,setorderDetail)}
+                        columns={columns(setOpen, setorderDetail)}
                         data={salesResume}
                         pagination={true}
                         customStyles={customStyles}
@@ -202,37 +210,55 @@ function Sales() {
                     />
                 </div>
             </section>
-           {orderDetail ? <Modal open={open} onClose={() => setOpen(false)} center >
-            <div className="modal-header">
-                <h5 className="modal-title f-w-600" id="exampleModalLabel2"> {orderDetail.id} </h5>
-            </div>
-            <div className="modal-body">
-            <br/>
-            total: {orderDetail.total}
-            <br/>
-            {orderDetail.date.toDate().toLocaleString('es-MX', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })}-----
-        {orderDetail.products.map(product=>
-           <div>
-               id: {product.id} <br/>
-               name: {product.name} <br/>
-               quantity: {product.quantity} <br/>
-               price: {product.price} <br/>
+            {orderDetail ? <Modal open={open} onClose={() => setOpen(false)} center >
 
+                <div style={{ padding: '3rem' }}>
+                    <div class="container">
+                        <h1 class="title">
+                            {orderDetail.id}
+                        </h1>
+                        <h2 class="subtitle">
+                            {orderDetail.date.toDate().toLocaleString('es-MX', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}
+                        </h2>
+                    </div>
+                    <div className="modal-body">
+                        <br />
+                        <br />
+                        <div class="table-container">
+                            <table class="table is-fullwidth">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Total</th>
+                                </tr>
+                                {orderDetail.products.map(product =>
+                                    <tr>
+                                        <td>{product.name} </td>
+                                        <td>{product.quantity}</td>
+                                        <td><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={product.price} displayType={'text'} thousandSeparator={true} prefix={'$'} /> </td>
+                                        <td><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={product.price * product.quantity} displayType={'text'} thousandSeparator={true} prefix={'$'} /> </td>
+                                    </tr>
+                                )}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td className='is-success'>TOTAL</td>
+                                    <td className='is-success'><b><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={orderDetail.total} displayType={'text'} thousandSeparator={true} prefix={'$'}/></b> </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="modal-footer">
 
-
-           </div>
-        )}
-
-            </div>
-            <div className="modal-footer">
-                
-            </div>
-        </Modal>: null}
+                    </div>
+                </div>
+            </Modal> : null}
         </div>
     )
 }
