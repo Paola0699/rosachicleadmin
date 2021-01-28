@@ -10,7 +10,7 @@ const db = firebase.firestore();
 
 function Newoutcome() {
     const [kind, setKind] = useState('');
-    const [outcomeKind, setOutcomeKind] = useState('');
+    const [outcomeKind, setOutcomeKind] = useState('Gasto General');
     const [concept, setConcept] = useState('');
     const [quantity, setQuantity] = useState(0);
     const [date, setDate] = useState('');
@@ -58,7 +58,8 @@ function Newoutcome() {
             paymethod: paymethod,
             responsable: responsable,
             authorizer: authorizer,
-            ticketImg: downloadURL
+            ticketImg: downloadURL,
+            status: 'No autorizado'
         }
         if(outcomeKind) 
             newOutcome.outcomeKind = outcomeKind

@@ -18,10 +18,12 @@ function ProductCrud() {
   const [price, setPrice] = useState(0)
   const [available, setAvailable] = useState(false)
   const [newCategory, setNewCategory] = useState('')
+  const [extern,setExtern] = useState(false);
   const [categoriesList, setCategoriesList] = useState([])
 
   //refs
   const categoryRef = useRef();
+  const externRef = useRef();
   const nameRef = useRef();
   const categorySelectRef = useRef();
   const descriptionRef = useRef();
@@ -80,9 +82,14 @@ function ProductCrud() {
   const handleCategorySubmit = e => {
     e.preventDefault();
     categoryRef.current.value = '';
-    db.collection("categories").add({
-      name: newCategory,
-    }).then(() => {
+    externRef.current.checked = false;
+    setExtern(false)
+    let newCat = {
+      name: newCategory
+    }
+    if(extern) 
+      newCat.extern=true 
+    db.collection("categories").add(newCat).then(() => {
       Swal.fire({
         icon: 'success',
         title: 'Creada',
@@ -150,7 +157,7 @@ function ProductCrud() {
                         </div>
                       </div>
                       <label class="checkbox">
-                        <input type="checkbox" />
+                        <input ref={externRef} type="checkbox" onChange={e=>setExtern(e.target.checked)} />
                           Proveedor Externo
                       </label>
                       <button type="submit" value='submit' className="button is-success is-fullwidth">
