@@ -134,12 +134,50 @@ const deleteProduct = async product => {
     }
 }
 
+
 function Products() {
     const [productsList, setProductsList] = useState([])
     const [filteredProductsList, setFilteredProductsList] = useState([])
     const [categoriesList, setCategoriesList] = useState([])
     const [orderDetail, setorderDetail] = useState();
     const [open, setOpen] = useState(false);
+    const [cal, setCal] = useState(0);
+    const [cost, setCost] = useState(0);
+    const [price, setPrice] = useState(0);
+    const [description, setDescription] = useState('');
+    const [available, setAvailable] = useState(false);
+
+
+    const modify = async () => {
+        const result = await Swal.fire({
+            icon: "warning",
+            title: `¿Seguro que quiere modificar ${orderDetail.name}?`,
+            showDenyButton: true,
+            confirmButtonText: `Si, modificalo`,
+            denyButtonText: `No`,
+        })
+        if (result.isConfirmed) {
+            db.collection('products').doc(orderDetail.id).update({
+                cal: Number(cal),
+                cost: Number(cost),
+                price: Number(price),
+                description: description,
+                available : available
+            }).then(() => {
+                Swal.fire(
+                    'Actualizado!',
+                    'El status se actulizo con exito',
+                    'success'
+                )
+            }).catch(error =>
+                Swal.fire(
+                    'Error!',
+                    `Ocurrio un error: ${error}`,
+                    'warning'
+                )
+            );
+        }
+    }
 
     useEffect(() => {
         db.collection("products").onSnapshot(doc => {
@@ -163,11 +201,21 @@ function Products() {
 
         });
     }, [])
+
     const filterProducts = filterBy => {
         if (filterBy)
             setFilteredProductsList(productsList.filter(product => product.category === filterBy))
         else
             setFilteredProductsList(productsList)
+    }
+
+    const selectProduct = pro=>{
+        setorderDetail(pro)
+        setCal(pro.cal)
+        setCost(pro.cost)
+        setPrice(pro.price)
+        setDescription(pro.description)
+        setAvailable(pro.available)
     }
     return (
         <div>
@@ -205,7 +253,7 @@ function Products() {
                         </div>
                     </div>
                     <DataTable
-                        columns={columns(deleteProduct, setorderDetail, setOpen)}
+                        columns={columns(deleteProduct, selectProduct, setOpen)}
                         data={filteredProductsList}
                         pagination={true}
                         customStyles={customStyles}
@@ -221,14 +269,14 @@ function Products() {
                     <div className="field">
                         <label className="label">Calorias</label>
                         <div className="control">
-                            <input className="input" type="number" placeholder="Calorias del producto" value={orderDetail.cal} />
+                            <input onChange={e => setCal(e.target.value)} className="input" type="number" placeholder="Calorias del producto" defaultValue={orderDetail.cal} />
                         </div>
                     </div>
 
                     <div className="field">
                         <label className="label">Costo de Producción</label>
                         <div className="control  has-icons-left">
-                            <input value={orderDetail.cost} className="input" type="number" />
+                            <input onChange={e => setCost(e.target.value)} defaultValue={orderDetail.cost} className="input" type="number" />
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>
@@ -238,7 +286,7 @@ function Products() {
                     <div className="field">
                         <label className="label">Precio de Venta</label>
                         <div className="control  has-icons-left">
-                            <input value={orderDetail.price} className="input" type="number" />
+                            <input onChange={e => setPrice(e.target.value)} defaultValue={orderDetail.price} className="input" type="number" />
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>
@@ -248,17 +296,17 @@ function Products() {
                     <div className="field">
                         <label className="label">Descripción</label>
                         <div className="control">
-                            <textarea value={orderDetail.description} className="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
+                            <textarea onChange={e => setDescription(e.target.value)} defaultValue={orderDetail.description} className="textarea" placeholder="e.g. Naranja, Guayaba, Piña, Miel, Limón, Jengibre"></textarea>
                         </div>
                     </div>
 
                     <label className="checkbox">
-                        <input type="checkbox" />
+                        <input onChange={e => setAvailable(e.target.checked)} defaultChecked={orderDetail.available} type="checkbox" />
                         Disponibilidad del Producto
                     </label>
                     <br />
                     <br />
-                    <button type="submit" value="Submit" className="button is-success is-fullwidth">Editar Producto</button>
+                    <button onClick={modify} type="submit" value="Submit" className="button is-success is-fullwidth">Editar Producto</button>
                 </div>
 
                 <div className="modal-footer">
