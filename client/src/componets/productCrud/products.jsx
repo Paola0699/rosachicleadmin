@@ -245,10 +245,6 @@ function Products() {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="control">
-                                    <button type="submit" className="button is-primary">Choose</button>
-
-                                </div>
                             </div>
                         </div>
                     </div>
