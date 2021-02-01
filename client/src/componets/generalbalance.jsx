@@ -17,8 +17,21 @@ function Balance() {
     const [salesByCategory, setSalesByCategory] = useState([])
     const [generalSales, setGeneralSales] = useState(0)
     const [sumOfIncomes, setSumOfIncomes] = useState(0)
+    const [defaultDate, setDefaultDate] =useState();
+
+    useEffect(()=>{
+        const today = new Date()
+        let month = today.getMonth()+1 <= 9 ?  `0${today.getMonth()+1}` :today.getMonth()+1
+        let day = today.getDate() <= 9 ?  `0${today.getDate()}` : today.getDate()
+        let customDate = `${today.getFullYear()}-${month}-${day}`
 
 
+        console.log(customDate)
+        setDefaultDate(customDate)
+        setStartDate(customDate)
+        setFinalDate(customDate)
+        
+    },[])
 
     useEffect(() => {
         getAllData()
@@ -38,9 +51,9 @@ function Balance() {
                     ...sale.data()
                 }
             })
-            setGeneralOutcome(getTotal(allOutcomes.filter(outcome => outcome.outcomeKind === 'Gasto General')))
-            setOperativeOutcome(getTotal(allOutcomes.filter(outcome => outcome.outcomeKind === 'Gasto Operativo')))
-            setAdministrativeOutcome(getTotal(allOutcomes.filter(outcome => outcome.outcomeKind === 'Gasto Administrativo')))
+            setGeneralOutcome(getTotal(allOutcomes.filter(outcome => {return outcome.outcomeKind === 'Gasto General' && outcome.status==='Autorizado'})))
+            setOperativeOutcome(getTotal(allOutcomes.filter(outcome => {return outcome.outcomeKind === 'Gasto Operativo' && outcome.status==='Autorizado'})))
+            setAdministrativeOutcome(getTotal(allOutcomes.filter(outcome => {return outcome.outcomeKind === 'Gasto Administrativo' && outcome.status==='Autorizado'})))
             const tempOtherIncomes = getTotal(allOutcomes.filter(outcome => outcome.kind === 'Ingreso'))
             setOtherIncomes(tempOtherIncomes)
             setTotalOutcome(getTotal(allOutcomes.filter(o=>o.kind==='Gasto')))
@@ -130,7 +143,7 @@ function Balance() {
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
-                                    <input onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate}  onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -138,7 +151,7 @@ function Balance() {
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
-                                    <input onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate}  onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
