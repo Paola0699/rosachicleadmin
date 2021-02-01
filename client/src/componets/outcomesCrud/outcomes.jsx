@@ -27,7 +27,7 @@ const columns = memoize((modal, outcome) => [
             day: 'numeric'
         }),
         sortable: true,
-        right: true,
+        left: true,
     },
 
     {
@@ -41,19 +41,20 @@ const columns = memoize((modal, outcome) => [
             thousandSeparator={true}
             prefix={'$'}
         />,
+        left: true,
     },
 
     {
         name: 'Status',
-        selector: 'year',
+        cell: row => <div>{row.status === "No autorizado" ? <h1 style={{color:'red', fontWeight:'700'}}>No Autorizado</h1> : row.status === "Pendiente" ? <h1 style={{color:'orange', fontWeight:'700'}}>Pendiente</h1> : <h1 style={{color:'green', fontWeight:'700'}}>Autorizado</h1>}</div>,
         sortable: true,
-        right: true,
+        left: true,
     },
     {
         name: 'Detalles',
         selector: 'year',
         cell: row => <button onClick={() => { modal(true); outcome(row) }} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>,
-        right: true,
+        left: true,
     },
 
 ]);
@@ -88,6 +89,7 @@ const customStyles = {
             color: '#616161',
             paddingLeft: '16px',
             paddingRight: '16px',
+          
         },
         activeSortStyle: {
             color: '#1293e1',
@@ -274,12 +276,21 @@ function Outcomes() {
                     <h3 class="subtitle is-size-6"> <b>Responsable: </b> {outcome.responsable}</h3>
                     <h3 class="subtitle is-size-6"> <b>Autoriza: </b> {outcome.authorizer}</h3>
                     {userType === 'admin' ? (<>
-                        <select className='select ' defaultValue={outcome.status} onChange={e => setNewState(e.target.value)} >
-                            <option>No autorizado</option>
-                            <option>Autorizado</option>
-                        </select> <br />
-                        <button className='button is-success' onClick={changeStatus} >Cambiar status</button>
+
+                        <div class="field">
+                            <label class="label">Status Gasto: </label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select className='select ' defaultValue={outcome.status} onChange={e => setNewState(e.target.value)} >
+                                        <option>No autorizado</option>
+                                        <option>Autorizado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button className='button is-success is-fullwidth' onClick={changeStatus} >Cambiar status</button>
                         <br />
+                        <br/>
                     </>) :
                         <h3 class="subtitle is-size-6"> <b>Status: </b> {outcome.status}</h3>
                     }

@@ -18,7 +18,7 @@ function ProductCrud() {
   const [price, setPrice] = useState(0)
   const [available, setAvailable] = useState(false)
   const [newCategory, setNewCategory] = useState('')
-  const [extern,setExtern] = useState(false);
+  const [extern, setExtern] = useState(false);
   const [categoriesList, setCategoriesList] = useState([])
 
   //refs
@@ -87,8 +87,8 @@ function ProductCrud() {
     let newCat = {
       name: newCategory
     }
-    if(extern) 
-      newCat.extern=true 
+    if (extern)
+      newCat.extern = true
     db.collection("categories").add(newCat).then(() => {
       Swal.fire({
         icon: 'success',
@@ -156,10 +156,22 @@ function ProductCrud() {
                           <input ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
                         </div>
                       </div>
-                      <label class="checkbox">
-                        <input ref={externRef} type="checkbox" onChange={e=>setExtern(e.target.checked)} />
+                      <div style={{display:'flex', justifyContent:'space-around', marginBottom:'2%'}}>
+                        <div>
+                          <label class="checkbox">
+                            <input ref={externRef} type="checkbox" onChange={e => setExtern(e.target.checked)} />
                           Proveedor Externo
                       </label>
+                        </div>
+                        <div>
+                          <label class="checkbox">
+                            <input type="checkbox" />
+                          Categoria Visible
+                      </label>
+                        </div>
+                      </div>
+
+
                       <button type="submit" value='submit' className="button is-success is-fullwidth">
                         Crear Categoría
                       </button>

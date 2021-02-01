@@ -59,7 +59,7 @@ function Newoutcome() {
             responsable: responsable,
             authorizer: authorizer,
             ticketImg: downloadURL,
-            status: 'No autorizado'
+            status: 'Pendiente'
         }
         if(outcomeKind) 
             newOutcome.outcomeKind = outcomeKind
