@@ -20,6 +20,7 @@ function ProductCrud() {
   const [newCategory, setNewCategory] = useState('')
   const [extern, setExtern] = useState(false);
   const [categoriesList, setCategoriesList] = useState([])
+  const [visible, setVisible] = useState(false)
 
   //refs
   const categoryRef = useRef();
@@ -31,6 +32,7 @@ function ProductCrud() {
   const costRef = useRef();
   const priceRef = useRef();
   const availableRef = useRef();
+  const visibleRef = useRef();
 
   const fields = [
     nameRef,
@@ -85,7 +87,8 @@ function ProductCrud() {
     externRef.current.checked = false;
     setExtern(false)
     let newCat = {
-      name: newCategory
+      name: newCategory,
+      visible: visible
     }
     if (extern)
       newCat.extern = true
@@ -164,8 +167,8 @@ function ProductCrud() {
                       </label>
                         </div>
                         <div>
-                          <label class="checkbox">
-                            <input type="checkbox" />
+                          < label class="checkbox">
+                            <input ref={visibleRef} onChange={e => setVisible(e.target.checked)}  type="checkbox" />
                           Categoria Visible
                       </label>
                         </div>
