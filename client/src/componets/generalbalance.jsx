@@ -252,8 +252,6 @@ function Balance() {
                                         </td>
                                     </tr>
                                 )}
-                         
-
                                 <tr style={{ fontWeight: '900', backgroundColor: '#e0e0e0' }}>
                                     <td >TOTAL GASTOS</td>
                                     <td> <CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalOutcome} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
