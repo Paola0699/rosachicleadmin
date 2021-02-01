@@ -18,8 +18,9 @@ function ProductCrud() {
   const [price, setPrice] = useState(0)
   const [available, setAvailable] = useState(false)
   const [newCategory, setNewCategory] = useState('')
-  const [extern,setExtern] = useState(false);
+  const [extern, setExtern] = useState(false);
   const [categoriesList, setCategoriesList] = useState([])
+  const [visible, setVisible] = useState(false)
 
   //refs
   const categoryRef = useRef();
@@ -31,6 +32,7 @@ function ProductCrud() {
   const costRef = useRef();
   const priceRef = useRef();
   const availableRef = useRef();
+  const visibleRef = useRef();
 
   const fields = [
     nameRef,
@@ -85,10 +87,11 @@ function ProductCrud() {
     externRef.current.checked = false;
     setExtern(false)
     let newCat = {
-      name: newCategory
+      name: newCategory,
+      visible: visible
     }
-    if(extern) 
-      newCat.extern=true 
+    if (extern)
+      newCat.extern = true
     db.collection("categories").add(newCat).then(() => {
       Swal.fire({
         icon: 'success',
@@ -156,10 +159,22 @@ function ProductCrud() {
                           <input ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
                         </div>
                       </div>
-                      <label class="checkbox">
-                        <input ref={externRef} type="checkbox" onChange={e=>setExtern(e.target.checked)} />
+                      <div style={{display:'flex', justifyContent:'space-around', marginBottom:'2%'}}>
+                        <div>
+                          <label class="checkbox">
+                            <input ref={externRef} type="checkbox" onChange={e => setExtern(e.target.checked)} />
                           Proveedor Externo
                       </label>
+                        </div>
+                        <div>
+                          < label class="checkbox">
+                            <input ref={visibleRef} onChange={e => setVisible(e.target.checked)}  type="checkbox" />
+                          Categoria Visible
+                      </label>
+                        </div>
+                      </div>
+
+
                       <button type="submit" value='submit' className="button is-success is-fullwidth">
                         Crear Categoría
                       </button>

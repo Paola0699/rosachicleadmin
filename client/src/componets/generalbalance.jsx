@@ -56,7 +56,7 @@ function Balance() {
             setAdministrativeOutcome(getTotal(allOutcomes.filter(outcome => {return outcome.outcomeKind === 'Gasto Administrativo' && outcome.status==='Autorizado'})))
             const tempOtherIncomes = getTotal(allOutcomes.filter(outcome => outcome.kind === 'Ingreso'))
             setOtherIncomes(tempOtherIncomes)
-            setTotalOutcome(getTotal(allOutcomes.filter(o=>o.kind==='Gasto')))
+            setTotalOutcome(getTotal(allOutcomes.filter(o => o.kind === 'Gasto')))
 
             const querySnapshot2 = await db.collection("orders")
                 .where('date', '>', toDate(startDate, 0, 0, 0))
@@ -82,7 +82,7 @@ function Balance() {
             const [totalGeneralSales, externTotals, totalIncomes] = totalGeneralSalesAndTotalSalesByCategory(allIncomes, externCategories)
             setGeneralSales(totalGeneralSales)
             setSalesByCategory(externTotals)
-            setSumOfIncomes(totalIncomes+tempOtherIncomes)
+            setSumOfIncomes(totalIncomes + tempOtherIncomes)
         }
     }
     const getTotal = filteredOutcome => {
@@ -114,7 +114,7 @@ function Balance() {
 
         const salesNotExtern = allProducts.reduce(reducer, 0)
         const getSumOfTotals = (accumulator, category) => accumulator + category.total;
-        const totalIncomes = salesNotExtern + externCategories.reduce(getSumOfTotals,0)
+        const totalIncomes = salesNotExtern + externCategories.reduce(getSumOfTotals, 0)
 
         return [salesNotExtern, externCategories, totalIncomes]
     }
@@ -195,8 +195,6 @@ function Balance() {
                                             prefix={'$'}
                                         />
                                     </td>
-
-
                                 </tr>
                                 <tr>
                                     <td>Gastos Operativos</td>
@@ -210,19 +208,17 @@ function Balance() {
                                             prefix={'$'}
                                         />
                                     </td>
-
-                                    {/* <td >Proteínas NA</td>
+                                    <td >Otros Ingresos</td>
                                     <td >
                                         <CurrencyFormat
                                             decimalScale={2}
                                             fixedDecimalScale={true}
-                                            value={120}
+                                            value={otherIncomes}
                                             displayType={'text'}
                                             thousandSeparator={true}
                                             prefix={'$'}
                                         />
-                                    </td> */}
-
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Gastos Administrativos</td>
@@ -236,7 +232,6 @@ function Balance() {
                                             prefix={'$'}
                                         />
                                     </td>
-
                                     {/* <td >Polka Donuts</td>
                                     <td >
                                         <CurrencyFormat
@@ -248,6 +243,9 @@ function Balance() {
                                             prefix={'$'}
                                         />
                                     </td> */}
+                                    <td colSpan='2' className='is-info' style={{ textAlign: 'center' }}>
+                                        Proveedores Externos
+                                    </td>
                                 </tr>
                                 {salesByCategory.map(c =>
                                     <tr>
@@ -267,26 +265,6 @@ function Balance() {
                                         </td>
                                     </tr>
                                 )}
-                                <tr>
-                                    <td></td>
-                                    <td style={{ borderRight: '1px solid #dee2e6' }}>
-                                    </td>
-
-                                    <td >Otros Ingresos</td>
-                                    <td >
-                                        <CurrencyFormat
-                                            decimalScale={2}
-                                            fixedDecimalScale={true}
-                                            value={otherIncomes}
-                                            displayType={'text'}
-                                            thousandSeparator={true}
-                                            prefix={'$'}
-                                        />
-                                    </td>
-
-
-                                </tr>
-
                                 <tr style={{ fontWeight: '900', backgroundColor: '#e0e0e0' }}>
                                     <td >TOTAL GASTOS</td>
                                     <td> <CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={totalOutcome} displayType={'text'} thousandSeparator={true} prefix={'$'} /></td>
@@ -301,7 +279,7 @@ function Balance() {
                                         <CurrencyFormat
                                             decimalScale={2}
                                             fixedDecimalScale={true}
-                                            value={sumOfIncomes-totalOutcome}
+                                            value={sumOfIncomes - totalOutcome}
                                             displayType={'text'}
                                             thousandSeparator={true}
                                             prefix={'$'}
