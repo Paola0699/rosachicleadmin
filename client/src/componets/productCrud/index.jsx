@@ -230,7 +230,7 @@ function ProductCrud() {
                       {categoriesList.map(cat =>
                         <tr key={cat.id}>
                           <td> {cat.name} </td>
-                          <td><button onClick={() => deleteCategory(cat)} className="button is-success is-outlined is-small">Eliminar</button><button className="button is-success is-small">Detalles</button></td>
+                          <td><button style={{marginRight:'3%'}} onClick={() => deleteCategory(cat)} className="button is-success is-outlined is-small">Eliminar</button><button className="button is-success is-small">Detalles</button></td>
                         </tr>
                       )}
                     </table>
