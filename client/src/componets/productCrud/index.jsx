@@ -21,9 +21,12 @@ function ProductCrud() {
   const [extern, setExtern] = useState(false);
   const [categoriesList, setCategoriesList] = useState([])
   const [visible, setVisible] = useState(false)
+  const [categoryDescription, setCategoryDescription] = useState('');
+  const [fileName, setFileName] = useState('');
 
   //refs
   const categoryRef = useRef();
+  const categoryDescriptionRef = useRef();
   const externRef = useRef();
   const nameRef = useRef();
   const categorySelectRef = useRef();
@@ -33,6 +36,7 @@ function ProductCrud() {
   const priceRef = useRef();
   const availableRef = useRef();
   const visibleRef = useRef();
+  const ticket = useRef();
 
   const fields = [
     nameRef,
@@ -81,14 +85,22 @@ function ProductCrud() {
       })
     })
   }
-  const handleCategorySubmit = e => {
+  const handleCategorySubmit = async e => {
     e.preventDefault();
+
+    let storageRef = firebase.storage().ref();
+    const ticketImg = storageRef.child(`cathegories/${Date.now()}.webp`);
+    await ticketImg.put(ticket.current.files[0])
+    const downloadURL = await ticketImg.getDownloadURL()
+
     categoryRef.current.value = '';
     externRef.current.checked = false;
     setExtern(false)
     let newCat = {
       name: newCategory,
-      visible: visible
+      visible: visible,
+      description: categoryDescription,
+      cover: downloadURL
     }
     if (extern)
       newCat.extern = true
@@ -105,6 +117,7 @@ function ProductCrud() {
         text: `Ocurrio un error: ${error}`,
       })
     })
+
   }
   async function deleteCategory(cat) {
     const result = await Swal.fire({
@@ -163,7 +176,7 @@ function ProductCrud() {
                       <div className="field">
                         <label className="label">Descripción</label>
                         <div className="control">
-                          <textarea class="textarea is-primary" placeholder="Descripción de la Categoría"></textarea>
+                          <textarea ref={categoryDescriptionRef} onChange={e=>setCategoryDescription(e.target.value)} class="textarea is-primary" placeholder="Descripción de la Categoría"></textarea>
                         </div>
                       </div>
 
@@ -171,7 +184,7 @@ function ProductCrud() {
                       <label className="label">Portada</label>
                       <div class="file has-name is-fullwidth">
                         <label class="file-label">
-                          <input class="file-input" type="file" name="resume" />
+                          <input ref={ticket} class="file-input" type="file" name="resume" />
                           <span class="file-cta">
                             <span class="file-icon">
                               <i class="fas fa-upload"></i>
@@ -204,7 +217,7 @@ function ProductCrud() {
                       </div>
 
 
-                      <button type="submit" value='submit' className="button is-success is-fullwidth">
+                      <button onClick={handleCategorySubmit} type="submit" value='submit' className="button is-success is-fullwidth">
                         Crear Categoría
                       </button>
                     </form>
