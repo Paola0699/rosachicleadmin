@@ -21,9 +21,12 @@ function ProductCrud() {
   const [extern, setExtern] = useState(false);
   const [categoriesList, setCategoriesList] = useState([])
   const [visible, setVisible] = useState(false)
+  const [categoryDescription, setCategoryDescription] = useState('');
+  const [fileName, setFileName] = useState('');
 
   //refs
   const categoryRef = useRef();
+  const categoryDescriptionRef = useRef();
   const externRef = useRef();
   const nameRef = useRef();
   const categorySelectRef = useRef();
@@ -33,6 +36,7 @@ function ProductCrud() {
   const priceRef = useRef();
   const availableRef = useRef();
   const visibleRef = useRef();
+  const ticket = useRef();
 
   const fields = [
     nameRef,
@@ -81,14 +85,22 @@ function ProductCrud() {
       })
     })
   }
-  const handleCategorySubmit = e => {
+  const handleCategorySubmit = async e => {
     e.preventDefault();
+
+    let storageRef = firebase.storage().ref();
+    const ticketImg = storageRef.child(`cathegories/${Date.now()}.webp`);
+    await ticketImg.put(ticket.current.files[0])
+    const downloadURL = await ticketImg.getDownloadURL()
+
     categoryRef.current.value = '';
     externRef.current.checked = false;
     setExtern(false)
     let newCat = {
       name: newCategory,
-      visible: visible
+      visible: visible,
+      description: categoryDescription,
+      cover: downloadURL
     }
     if (extern)
       newCat.extern = true
@@ -105,6 +117,7 @@ function ProductCrud() {
         text: `Ocurrio un error: ${error}`,
       })
     })
+
   }
   async function deleteCategory(cat) {
     const result = await Swal.fire({
@@ -159,7 +172,36 @@ function ProductCrud() {
                           <input ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
                         </div>
                       </div>
-                      <div style={{display:'flex', justifyContent:'space-around', marginBottom:'2%'}}>
+
+                      <div className="field">
+                        <label className="label">Descripción</label>
+                        <div className="control">
+                          <textarea ref={categoryDescriptionRef} onChange={e=>setCategoryDescription(e.target.value)} class="textarea is-primary" placeholder="Descripción de la Categoría"></textarea>
+                        </div>
+                      </div>
+
+
+                      <label className="label">Portada</label>
+                      <div class="file has-name is-fullwidth">
+                        <label class="file-label">
+                          <input ref={ticket} class="file-input" type="file" name="resume" />
+                          <span class="file-cta">
+                            <span class="file-icon">
+                              <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">
+                              Elige un Archivo...
+                            </span>
+                          </span>
+                          <span class="file-name">
+                            Screen Shot 2017-07-29 at 15.54.25.png
+                          </span>
+                        </label>
+                      </div>
+
+                      <br />
+
+                      <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2%' }}>
                         <div>
                           <label class="checkbox">
                             <input ref={externRef} type="checkbox" onChange={e => setExtern(e.target.checked)} />
@@ -175,11 +217,27 @@ function ProductCrud() {
                       </div>
 
 
-                      <button type="submit" value='submit' className="button is-success is-fullwidth">
+                      <button onClick={handleCategorySubmit} type="submit" value='submit' className="button is-success is-fullwidth">
                         Crear Categoría
                       </button>
                     </form>
-                    <br />
+                  </div>
+                </div>
+              </div>
+              <br />
+              <div className='card'>
+                <header className="card-header">
+                  <p className="card-header-title">
+                    Categorías
+                </p>
+                  <a href="#" className="card-header-icon" aria-label="more options">
+                    <span className="icon">
+                      <i className="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </a>
+                </header>
+                <div className="card-content">
+                  <div className="content">
                     <table>
                       <tr>
                         <th>Nombre</th>
@@ -188,7 +246,7 @@ function ProductCrud() {
                       {categoriesList.map(cat =>
                         <tr key={cat.id}>
                           <td> {cat.name} </td>
-                          <td><button onClick={() => deleteCategory(cat)} className="button is-success is-outlined is-small">Eliminar</button></td>
+                          <td><button style={{marginRight:'3%'}} onClick={() => deleteCategory(cat)} className="button is-success is-outlined is-small">Eliminar</button><button className="button is-success is-small">Detalles</button></td>
                         </tr>
                       )}
                     </table>
