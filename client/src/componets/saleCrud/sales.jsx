@@ -118,11 +118,12 @@ function Sales() {
     }, [startDate, finalDate])
     useEffect(()=>{
         const today = new Date()
-        let customDate = ''
-        if(today.getMonth()+1 <= 9)
-            customDate = `${today.getFullYear()}-0${today.getMonth()+1}-${today.getDate()}`
-        else
-            customDate = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`
+        let month = today.getMonth()+1 <= 9 ?  `0${today.getMonth()+1}` :today.getMonth()+1
+        let day = today.getDate() <= 9 ?  `0${today.getDate()}` : today.getDate()
+        let customDate = `${today.getFullYear()}-${month}-${day}`
+
+
+        console.log(customDate)
         setDefaultDate(customDate)
         setStartDate(customDate)
         setFinalDate(customDate)
