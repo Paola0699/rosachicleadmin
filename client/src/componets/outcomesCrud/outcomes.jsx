@@ -123,6 +123,7 @@ function Outcomes() {
     const [outcomes, setOutcomes] = useState([]);
     const [userType, setUserType] = useState("")
     const [newSatate, setNewState] = useState()
+    const [defaultDate, setDefaultDate] =useState();
 
     async function getUserType(user, setUserType) {
         const userType = await db.collection("accounts").doc(user.uid).get()
@@ -145,6 +146,19 @@ function Outcomes() {
             else
                 console.log('no user')
         });
+
+        const today = new Date()
+        let month = today.getMonth()+1 <= 9 ?  `0${today.getMonth()+1}` :today.getMonth()+1
+        let day = today.getDate() <= 9 ?  `0${today.getDate()}` : today.getDate()
+        let customDate = `${today.getFullYear()}-${month}-${day}`
+
+
+        console.log(customDate)
+        setDefaultDate(customDate)
+        setStartDate(customDate)
+        setFinalDate(customDate)
+
+
     }, []);
 
     useEffect(() => {
@@ -229,7 +243,7 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
-                                    <input onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate}  onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -237,7 +251,7 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
-                                    <input onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate}  onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
