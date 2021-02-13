@@ -120,7 +120,7 @@ function Navbar() {
                         <div className="navbar-item">
                             <div className="buttons">
                                 <Link onClick={close} to={`${process.env.PUBLIC_URL}`}>
-                                    <a className="button is-link is-outlined">
+                                    <a className="button is-success is-outlined">
                                         Cerrar Sesión
                                     </a>
                                 </Link>
