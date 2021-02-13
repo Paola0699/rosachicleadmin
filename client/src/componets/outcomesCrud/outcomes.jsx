@@ -345,7 +345,7 @@ function Outcomes() {
                     </>) :
                         <h3 class="subtitle is-size-6"> <b>Status: </b> {outcome.status}</h3>
                     }
-                    <img style={{ width: '25rem' }} src={outcome.ticketImg} alt="ticketImg" />x
+                    <img style={{ width: '25rem' }} src={outcome.ticketImg} alt="ticketImg" />
                     <div className="modal-footer">
 
                     </div>
