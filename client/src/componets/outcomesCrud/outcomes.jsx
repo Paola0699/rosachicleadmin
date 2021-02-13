@@ -9,6 +9,7 @@ import 'react-responsive-modal/styles.css';
 import CurrencyFormat from 'react-currency-format';
 import Swal from 'sweetalert2'
 import './outcome.scss'
+import { Redirect } from "react-router-dom"
 
 const db = firebase.firestore();
 const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
@@ -46,7 +47,7 @@ const columns = memoize((modal, outcome) => [
 
     {
         name: 'Status',
-        cell: row => <div>{row.status === "No autorizado" ? <h1 style={{color:'red', fontWeight:'700'}}>No Autorizado</h1> : row.status === "Pendiente" ? <h1 style={{color:'orange', fontWeight:'700'}}>Pendiente</h1> : <h1 style={{color:'green', fontWeight:'700'}}>Autorizado</h1>}</div>,
+        cell: row => <div>{row.status === "No autorizado" ? <h1 style={{ color: 'red', fontWeight: '700' }}>No Autorizado</h1> : row.status === "Pendiente" ? <h1 style={{ color: 'orange', fontWeight: '700' }}>Pendiente</h1> : <h1 style={{ color: 'green', fontWeight: '700' }}>Autorizado</h1>}</div>,
         sortable: true,
         left: true,
     },
@@ -89,7 +90,7 @@ const customStyles = {
             color: '#616161',
             paddingLeft: '16px',
             paddingRight: '16px',
-          
+
         },
         activeSortStyle: {
             color: '#1293e1',
@@ -123,7 +124,8 @@ function Outcomes() {
     const [outcomes, setOutcomes] = useState([]);
     const [userType, setUserType] = useState("")
     const [newSatate, setNewState] = useState()
-    const [defaultDate, setDefaultDate] =useState();
+    const [defaultDate, setDefaultDate] = useState();
+    const [redirect, setRedirect] = useState(false);
 
     async function getUserType(user, setUserType) {
         const userType = await db.collection("accounts").doc(user.uid).get()
@@ -148,8 +150,8 @@ function Outcomes() {
         });
 
         const today = new Date()
-        let month = today.getMonth()+1 <= 9 ?  `0${today.getMonth()+1}` :today.getMonth()+1
-        let day = today.getDate() <= 9 ?  `0${today.getDate()}` : today.getDate()
+        let month = today.getMonth() + 1 <= 9 ? `0${today.getMonth() + 1}` : today.getMonth() + 1
+        let day = today.getDate() <= 9 ? `0${today.getDate()}` : today.getDate()
         let customDate = `${today.getFullYear()}-${month}-${day}`
 
 
@@ -208,7 +210,16 @@ function Outcomes() {
             )
         );
     }
-    return (
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+        } else {
+            setRedirect(true)
+            console.log("No estoy loggeado")
+        }
+    });
+    return redirect ? <Redirect to='/' /> :(
         <div>
             <Navbar />
             <section class="hero is-primary">
@@ -243,7 +254,7 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
-                                    <input defaultValue={defaultDate}  onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate} onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -251,7 +262,7 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
-                                    <input defaultValue={defaultDate}  onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate} onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -304,7 +315,7 @@ function Outcomes() {
                         </div>
                         <button className='button is-success is-fullwidth' onClick={changeStatus} >Cambiar status</button>
                         <br />
-                        <br/>
+                        <br />
                     </>) :
                         <h3 class="subtitle is-size-6"> <b>Status: </b> {outcome.status}</h3>
                     }

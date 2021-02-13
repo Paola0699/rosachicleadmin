@@ -7,6 +7,9 @@ import firebase from '../../firebaseElements/firebase'
 import { Modal } from 'react-responsive-modal'
 import memoize from 'memoize-one';
 import 'react-responsive-modal/styles.css';
+import { Redirect } from "react-router-dom"
+
+
 const db = firebase.firestore();
 const columns = memoize((details, setDetails) => [
     {
@@ -112,6 +115,18 @@ function Sales() {
     const [open, setOpen] = useState(false);
     const [orderDetail, setorderDetail] = useState();
     const [defaultDate, setDefaultDate] =useState();
+    const [redirect, setRedirect] = useState(false);
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+        } else {
+           setRedirect(true)
+           console.log("No estoy loggeado")
+        }
+    });
+
+
     useEffect(() => {
         getAllData()
         console.log('effect')
@@ -163,7 +178,7 @@ function Sales() {
         const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
         return firebase.firestore.Timestamp.fromDate(temDate)
     }
-    return (
+    return redirect ? <Redirect to='/' /> :(
         <div>
             <Navbar />
             <section class="hero is-primary">

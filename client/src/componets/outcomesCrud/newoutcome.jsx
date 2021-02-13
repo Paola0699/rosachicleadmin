@@ -5,6 +5,7 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState, useRef } from "react";
 import firebase from '../../firebaseElements/firebase'
 import Swal from 'sweetalert2'
+import { Redirect } from "react-router-dom"
 
 const db = firebase.firestore();
 
@@ -19,6 +20,8 @@ function Newoutcome() {
     const [responsable, setResponsable] = useState('');
     const [authorizer, setAuthorizer] = useState('');
     const [fileName, setFileName] = useState('');
+    const [redirect, setRedirect] = useState(false);
+
 
     const ticket = useRef(null);
     const kindRef = useRef(null);
@@ -31,7 +34,7 @@ function Newoutcome() {
     const responsableRef = useRef(null);
     const authorizerRef = useRef(null);
 
-    const refs=[ticket,
+    const refs = [ticket,
         kindRef,
         conceptRef,
         quantityRef,
@@ -61,7 +64,7 @@ function Newoutcome() {
             ticketImg: downloadURL,
             status: 'Pendiente'
         }
-        if(outcomeKind) 
+        if (outcomeKind)
             newOutcome.outcomeKind = outcomeKind
         db.collection('outcomes').add(newOutcome).then(() => {
             Swal.fire(
@@ -69,7 +72,7 @@ function Newoutcome() {
                 'El movimiento se registro con exito',
                 'success'
             )
-            refs.forEach(ref=>ref.current.value='')
+            refs.forEach(ref => ref.current.value = '')
             //outcomeKindRef.current.value='Gasto General'
             //ticket.current.files[0]=''
             setFileName('')
@@ -88,7 +91,17 @@ function Newoutcome() {
         const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
         return firebase.firestore.Timestamp.fromDate(temDate)
     }
-    return (
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+        } else {
+            setRedirect(true)
+            console.log("No estoy loggeado")
+        }
+    });
+
+    return redirect ? <Redirect to='/' /> :(
         <div>
             <Navbar />
             <section class="hero is-primary">
@@ -96,7 +109,7 @@ function Newoutcome() {
                     <div class="container">
                         <h1 class="title">Nuevo Gasto</h1>
                         <h2 class="subtitle">Dar de alta un nuevo gasto o ingreso</h2>
-                        <Breadcrum  parent='Gastos e Ingresos' children='Nuevo Gasto' />
+                        <Breadcrum parent='Gastos e Ingresos' children='Nuevo Gasto' />
                     </div>
                 </div>
             </section>
@@ -147,7 +160,7 @@ function Newoutcome() {
                                         <div class="field">
                                             <label class="label">*Importe</label>
                                             <div class="control">
-                                                <input ref={quantityRef} onChange={e => setQuantity(e.target.value)} class="input" type="number" placeholder="Nombre del producto" />
+                                                <input ref={quantityRef} onChange={e => setQuantity(e.target.value)} class="input" type="number" placeholder="Nombre del producto" min="0" step="0.01" />
                                             </div>
                                         </div>
                                         <div class="field">

@@ -4,6 +4,7 @@ import DataTable from 'react-data-table-component';
 import CurrencyFormat from 'react-currency-format';
 import { useEffect, useState } from "react";
 import firebase from '../../firebaseElements/firebase'
+import { Redirect } from "react-router-dom"
 
 
 const db = firebase.firestore();
@@ -125,6 +126,16 @@ function Salescat() {
     const [allProducts, setAllProducts] = useState([])
     const [totalCost, setTotalCost] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
+    const [redirect, setRedirect] = useState(false);
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+        } else {
+           setRedirect(true)
+           console.log("No estoy loggeado")
+        }
+    });
 
     useEffect(() => {
         getAllData()
@@ -174,7 +185,7 @@ function Salescat() {
         const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
         return firebase.firestore.Timestamp.fromDate(temDate)
     }
-    return (
+    return redirect ? <Redirect to='/' /> :(
         <div>
             <Navbar />
             <section class="hero is-primary">

@@ -6,6 +6,8 @@ import { Modal } from 'react-responsive-modal'
 import 'react-responsive-modal/styles.css';
 import CurrencyFormat from 'react-currency-format';
 import Swal from 'sweetalert2'
+import { Redirect } from "react-router-dom"
+
 
 const db = firebase.firestore();
 const quantityButtonStyle = {
@@ -29,6 +31,16 @@ function Newsale() {
     const [orderProducts, setOrderProducts] = useState([])
     const [open, setOpen] = useState(false);
     const [payMethod, setPayMethod] = useState('cash')
+    const [redirect, setRedirect] = useState(false);
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+        } else {
+           setRedirect(true)
+           console.log("No estoy loggeado")
+        }
+    });
 
     useEffect(() => {
         db.collection("products").onSnapshot(doc => {
@@ -149,7 +161,8 @@ function Newsale() {
             setOpen(false);
         }
     }
-    return (<>
+    return redirect ? <Redirect to='/' /> :(
+    <>
         <div>
             <Navbar />
             <section className="hero is-primary">

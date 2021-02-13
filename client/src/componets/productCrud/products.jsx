@@ -10,6 +10,7 @@ import 'react-responsive-modal/styles.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import CurrencyFormat from 'react-currency-format';
+import { Redirect } from "react-router-dom"
 
 const columns = memoize((deleteProduct, seOrder, modal) => [
     {
@@ -146,8 +147,17 @@ function Products() {
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [available, setAvailable] = useState(false);
+    const [redirect, setRedirect] = useState(false);
 
-
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+        } else {
+           setRedirect(true)
+           console.log("No estoy loggeado")
+        }
+    });
+    
     const modify = async () => {
         const result = await Swal.fire({
             icon: "warning",
@@ -162,7 +172,7 @@ function Products() {
                 cost: Number(cost),
                 price: Number(price),
                 description: description,
-                available : available
+                available: available
             }).then(() => {
                 Swal.fire(
                     'Actualizado!',
@@ -209,7 +219,7 @@ function Products() {
             setFilteredProductsList(productsList)
     }
 
-    const selectProduct = pro=>{
+    const selectProduct = pro => {
         setorderDetail(pro)
         setCal(pro.cal)
         setCost(pro.cost)
@@ -217,7 +227,8 @@ function Products() {
         setDescription(pro.description)
         setAvailable(pro.available)
     }
-    return (
+
+    return redirect ? <Redirect to='/' /> : (
         <div>
             <Navbar />
             <section className="hero is-primary">
@@ -272,7 +283,7 @@ function Products() {
                     <div className="field">
                         <label className="label">Costo de Producción</label>
                         <div className="control  has-icons-left">
-                            <input onChange={e => setCost(e.target.value)} defaultValue={orderDetail.cost} className="input" type="number"  min="0" step="0.01"/>
+                            <input onChange={e => setCost(e.target.value)} defaultValue={orderDetail.cost} className="input" type="number" min="0" step="0.01" />
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>
@@ -282,7 +293,7 @@ function Products() {
                     <div className="field">
                         <label className="label">Precio de Venta</label>
                         <div className="control  has-icons-left">
-                            <input onChange={e => setPrice(e.target.value)} defaultValue={orderDetail.price} className="input" type="number"  min="0" step="0.01"/>
+                            <input onChange={e => setPrice(e.target.value)} defaultValue={orderDetail.price} className="input" type="number" min="0" step="0.01" />
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>
