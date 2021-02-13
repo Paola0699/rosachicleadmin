@@ -248,7 +248,7 @@ function ProductCrud() {
                       <div className="field">
                         <label className="label">Descripción</label>
                         <div className="control">
-                          <textarea ref={categoryDescriptionRef} onChange={e=>setCategoryDescription(e.target.value)} className="textarea is-primary" placeholder="Descripción de la Categoría"></textarea>
+                          <textarea ref={categoryDescriptionRef} onChange={e=>setCategoryDescription(e.target.value)} className="textarea" placeholder="Descripción de la Categoría"></textarea>
                         </div>
                       </div>
 
@@ -353,7 +353,7 @@ function ProductCrud() {
                       <label className="label">Categoría</label>
                       <div className="control">
                         <div className="select is-fullwidth">
-                          <select ref={categorySelectRef} onChange={e => setCategory(e.target.value)} >
+                          <select ref={categorySelectRef} onChange={e => setCategory(e.target.value)} required>
                             <option selected disabled value='' >Seleccione una categoría</option>
                             {categoriesList.map(cat =>
                               <option key={cat.id} value={cat.name}> {cat.name} </option>
@@ -377,7 +377,7 @@ function ProductCrud() {
                     <div className="field">
                       <label className="label">Costo de Producción</label>
                       <div className="control  has-icons-left">
-                        <input ref={costRef} onChange={e => setCost(e.target.value)} className="input" type="number" />
+                        <input ref={costRef} onChange={e => setCost(e.target.value)} className="input" type="number" min="0" step="0.01"/>
                         <span className="icon is-small is-left">
                           <FontAwesomeIcon icon={faDollarSign} />
                         </span>
@@ -386,7 +386,7 @@ function ProductCrud() {
                     <div className="field">
                       <label className="label">Precio de venta</label>
                       <div className="control  has-icons-left">
-                        <input ref={priceRef} onChange={e => setPrice(e.target.value)} className="input" type="number" />
+                        <input ref={priceRef} onChange={e => setPrice(e.target.value)} className="input" type="number"  min="0" step="0.01"/>
                         <span className="icon is-small is-left">
                           <FontAwesomeIcon icon={faDollarSign} />
                         </span>

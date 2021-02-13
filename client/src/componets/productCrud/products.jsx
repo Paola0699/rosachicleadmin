@@ -272,7 +272,7 @@ function Products() {
                     <div className="field">
                         <label className="label">Costo de Producción</label>
                         <div className="control  has-icons-left">
-                            <input onChange={e => setCost(e.target.value)} defaultValue={orderDetail.cost} className="input" type="number" />
+                            <input onChange={e => setCost(e.target.value)} defaultValue={orderDetail.cost} className="input" type="number"  min="0" step="0.01"/>
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>
@@ -282,7 +282,7 @@ function Products() {
                     <div className="field">
                         <label className="label">Precio de Venta</label>
                         <div className="control  has-icons-left">
-                            <input onChange={e => setPrice(e.target.value)} defaultValue={orderDetail.price} className="input" type="number" />
+                            <input onChange={e => setPrice(e.target.value)} defaultValue={orderDetail.price} className="input" type="number"  min="0" step="0.01"/>
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>
