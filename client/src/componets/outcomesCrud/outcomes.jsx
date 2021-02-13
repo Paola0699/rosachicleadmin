@@ -136,8 +136,6 @@ function Outcomes() {
             if (userType.data().type === 'admin') {
                 setUserType('admin')
                 setName(userType.data().name)
-                console.log('admin')
-                console.log('nombre: ' + name)
             } else {
                 setUserType('user')
                 console.log('user')
@@ -180,7 +178,7 @@ function Outcomes() {
     }
 
     const getAllData = async () => {
-        if (startDate && finalDate && kind) {
+        if (startDate && finalDate && kind && name) {
 
             console.log('get data')
             console.log(name)
@@ -188,6 +186,22 @@ function Outcomes() {
                 .where('kind', '==', kind)
                 .where('date', '>', toDate(startDate, 0, 0, 0))
                 .where('authorizer', '==', name)
+                .where('status', '==', 'Pendiente')
+                .where('date', '<=', toDate(finalDate, 23, 59, 59)).onSnapshot(querySnapshot => {
+                    const temOutcomes = querySnapshot.docs.map(sale => {
+                        return {
+                            id: sale.id,
+                            ...sale.data()
+                        }
+                    })
+                    setOutcomes(temOutcomes)
+                })
+        }
+
+        else if (startDate && finalDate && kind) {
+            const querySnapshot = await db.collection("outcomes")
+                .where('kind', '==', kind)
+                .where('date', '>', toDate(startDate, 0, 0, 0))
                 .where('date', '<=', toDate(finalDate, 23, 59, 59)).onSnapshot(querySnapshot => {
                     const temOutcomes = querySnapshot.docs.map(sale => {
                         return {
