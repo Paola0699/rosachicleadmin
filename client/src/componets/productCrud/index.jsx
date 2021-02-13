@@ -256,7 +256,7 @@ function ProductCrud() {
                       <label className="label">Portada</label>
                       <div className="file has-name is-fullwidth">
                         <label className="file-label">
-                          <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} className="file-input" type="file" name="resume" />
+                          <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} className="file-input" type="file" name="resume" accept="image/x-png,image/gif,image/jpeg" />
                           <span className="file-cta">
                             <span className="file-icon">
                               <i className="fas fa-upload"></i>
@@ -427,7 +427,7 @@ function ProductCrud() {
                       <img style={{ width: '25rem' }} src={ fileName ? fileName : categoryDet.cover} alt="ticketImg" />
                       <div className="file has-name is-fullwidth">
                         <label className="file-label">
-                          <input onChange={e => previewFile(e.target.files[0])} ref={ticket} className="file-input" type="file" name="resume" />
+                          <input onChange={e => previewFile(e.target.files[0])} ref={ticket} className="file-input" type="file" name="resume" accept="image/x-png,image/gif,image/jpeg" />
                           <span className="file-cta">
                             <span className="file-icon">
                               <i className="fas fa-upload"></i>
