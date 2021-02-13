@@ -419,11 +419,9 @@ function ProductCrud() {
       </section>
       {categoryDet ? <Modal open={open} onClose={closeModal} center >
         <div>
+          <br/>
           <div className="field">
-            <label className="label">Nombre Categoría</label>
-            <div className="control">
-              <input defaultValue={categoryDet.name} ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
-            </div>
+            <h1 style={{fontSize: '1.5rem'}}>Nombre Categoría: <b>{categoryDet.name}</b></h1>
           </div>
 
           <div className="field">
