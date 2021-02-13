@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
@@ -28,7 +29,7 @@ function ProductCrud() {
   const [open, setOpen] = useState(false);
   const [categoryDet, setCategoryDet] = useState();
   const [redirect, setRedirect] = useState(false);
-
+  const [usertype, setUser] = useState('')
   //refs
   const categoryRef = useRef();
   const categoryDescriptionRef = useRef();
@@ -171,8 +172,8 @@ function ProductCrud() {
       const downloadURL = await ticketImg.getDownloadURL()
       newData.cover = downloadURL
     }
-    if (newCategory)
-      newData.name = newCategory
+    /*     if (newCategory)
+          newData.name = newCategory */
     if (cat.visible && visible !== cat.visible)
       newData.visible = visible
     if (cat.extern && extern !== cat.extern)
@@ -212,16 +213,21 @@ function ProductCrud() {
 
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      // User is signed in.
+      db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+        if (doc.data().type === 'admin') {
+          setUser("admin")
+        }
+        else setUser("user")
+      })
     } else {
       setRedirect(true)
       console.log("No estoy loggeado")
     }
   });
 
-  return redirect ? <Redirect to='/' /> :(
+  return redirect ? <Redirect to='/' /> : (
     <div>
-      <Navbar />
+      {usertype === "admin" ? <Navbar /> : <Navbargen />}
       <section className="hero is-primary">
         <div className="hero-body">
           <div className="container">
@@ -419,9 +425,9 @@ function ProductCrud() {
       </section>
       {categoryDet ? <Modal open={open} onClose={closeModal} center >
         <div>
-          <br/>
+          <br />
           <div className="field">
-            <h1 style={{fontSize: '1.5rem'}}>Nombre Categoría: <b>{categoryDet.name}</b></h1>
+            <h1 style={{ fontSize: '1.5rem' }}>Nombre Categoría: <b>{categoryDet.name}</b></h1>
           </div>
 
           <div className="field">

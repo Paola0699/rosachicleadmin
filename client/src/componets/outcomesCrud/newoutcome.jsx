@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
@@ -21,7 +22,7 @@ function Newoutcome() {
     const [authorizer, setAuthorizer] = useState('');
     const [fileName, setFileName] = useState('');
     const [redirect, setRedirect] = useState(false);
-
+    const [usertype, setUser] = useState('')
 
     const ticket = useRef(null);
     const kindRef = useRef(null);
@@ -94,16 +95,21 @@ function Newoutcome() {
 
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            // User is signed in.
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
         } else {
             setRedirect(true)
             console.log("No estoy loggeado")
         }
     });
 
-    return redirect ? <Redirect to='/' /> :(
+    return redirect ? <Redirect to='/' /> : (
         <div>
-            <Navbar />
+            {usertype === "admin" ? <Navbar /> : <Navbargen/>}
             <section class="hero is-primary">
                 <div class="hero-body">
                     <div class="container">

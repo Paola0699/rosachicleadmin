@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import firebase from '../../firebaseElements/firebase'
@@ -126,6 +127,7 @@ function Outcomes() {
     const [newSatate, setNewState] = useState()
     const [defaultDate, setDefaultDate] = useState();
     const [redirect, setRedirect] = useState(false);
+    const [usertype, setUser] = useState('')
 
     async function getUserType(user, setUserType) {
         const userType = await db.collection("accounts").doc(user.uid).get()
@@ -213,7 +215,12 @@ function Outcomes() {
 
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            // User is signed in.
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
         } else {
             setRedirect(true)
             console.log("No estoy loggeado")
@@ -221,7 +228,7 @@ function Outcomes() {
     });
     return redirect ? <Redirect to='/' /> :(
         <div>
-            <Navbar />
+           {usertype === "admin" ? <Navbar /> : <Navbargen/>}
             <section class="hero is-primary">
                 <div class="hero-body">
                     <div class="container">

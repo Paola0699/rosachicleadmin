@@ -28,15 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-function close(){
-    firebase.auth().signOut().then(function() {
+function close() {
+    firebase.auth().signOut().then(function () {
         console.log('Sign-out uccessful')
-      }).catch(function(error) {
+    }).catch(function (error) {
         // An error happened.
-      }); 
+    });
 }
 
-function Navbar() {
+function Navbargen() {
     return (
         <div>
             <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
@@ -89,39 +89,13 @@ function Navbar() {
                                         Consultar Gastos e Ingresos
                                     </a>
                                 </Link>
-                                <Link to={`${process.env.PUBLIC_URL}/balance-general`}>
-                                    <a className="navbar-item">
-                                        Balance General
-                            </a>
-                                </Link>
                             </div>
                         </div>
-
-
-                        <div className="navbar-item has-dropdown is-hoverable">
-                            <a className="navbar-link">
-                                Ventas
-                            </a>
-
-                            <div className="navbar-dropdown">
-                                <Link to={`${process.env.PUBLIC_URL}/nueva-venta`}>
-                                    <a className="navbar-item">
-                                        Nueva Venta
-                                </a>
-                                </Link>
-                                <Link to={`${process.env.PUBLIC_URL}/ventas`}>
-                                    <a className="navbar-item">
-                                        Ventas Generales
-                                </a>
-                                </Link>
-                                <Link to={`${process.env.PUBLIC_URL}/ventas-desglosado`}>
-                                    <a className="navbar-item">
-                                        Ventas por Categoria
-                                </a>
-                                </Link>
-                            </div>
-                        </div>
-
+                        <a className="navbar-item">
+                            <Link to={`${process.env.PUBLIC_URL}/nueva-venta`}>
+                                Nueva Venta
+                                    </Link>
+                        </a>
                     </div>
 
                     <div className="navbar-end">
@@ -137,7 +111,7 @@ function Navbar() {
                     </div>
                 </div>
             </nav>
-        </div>
+        </div >
     );
 }
-export default Navbar;
+export default Navbargen;

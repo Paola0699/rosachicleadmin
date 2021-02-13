@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import { useEffect, useRef, useState } from 'react'
 import firebase from '../../firebaseElements/firebase'
@@ -31,14 +32,19 @@ function Newsale() {
     const [orderProducts, setOrderProducts] = useState([])
     const [open, setOpen] = useState(false);
     const [payMethod, setPayMethod] = useState('cash')
-    const [redirect, setRedirect] = useState(false);
-
+    const [redirect, setRedirect] = useState(false)
+    const [usertype, setUser] = useState('')
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            // User is signed in.
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
         } else {
-           setRedirect(true)
-           console.log("No estoy loggeado")
+            setRedirect(true)
+            console.log("No estoy loggeado")
         }
     });
 
@@ -161,201 +167,201 @@ function Newsale() {
             setOpen(false);
         }
     }
-    return redirect ? <Redirect to='/' /> :(
-    <>
-        <div>
-            <Navbar />
-            <section className="hero is-primary">
-                <div className="hero-body">
-                    <div className="container">
-                        <h1 className="title">Nueva Venta</h1>
-                        <h2 className="subtitle">Generar Venta</h2>
-                        <Breadcrum parent='Ventas' children='Nueva Venta' />
+    return redirect ? <Redirect to='/' /> : (
+        <>
+            <div>
+                {usertype === "admin" ? <Navbar /> : <Navbargen/>}
+                <section className="hero is-primary">
+                    <div className="hero-body">
+                        <div className="container">
+                            <h1 className="title">Nueva Venta</h1>
+                            <h2 className="subtitle">Generar Venta</h2>
+                            <Breadcrum parent='Ventas' children='Nueva Venta' />
+                        </div>
                     </div>
-                </div>
-            </section>
-            <section className="section">
-                <div className="container">
-                    <div className='columns'>
-                        <div className="column">
-                            <label>Seleccione Categoría:</label>
-                            <div className="field has-addons">
-                                <div className="control is-expanded">
-                                    <div className="select is-fullwidth">
-                                        <select onChange={e => filterProducts(e.target.value)} name="country">
-                                            {categoriesList.map(cat =>
-                                                <option key={cat.id} value={cat.name}> {cat.name} </option>
-                                            )}
-                                        </select>
+                </section>
+                <section className="section">
+                    <div className="container">
+                        <div className='columns'>
+                            <div className="column">
+                                <label>Seleccione Categoría:</label>
+                                <div className="field has-addons">
+                                    <div className="control is-expanded">
+                                        <div className="select is-fullwidth">
+                                            <select onChange={e => filterProducts(e.target.value)} name="country">
+                                                {categoriesList.map(cat =>
+                                                    <option key={cat.id} value={cat.name}> {cat.name} </option>
+                                                )}
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                {/* <div className="control">
+                                    {/* <div className="control">
                                     <button type="submit" className="button is-success">Seleccionar</button>
                                 </div> */}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className='columns'>
-                        <div className="column">
-                            <div className='card'>
-                                <header className="card-header">
-                                    <p className="card-header-title">
-                                        Productos de la  Categoría
+                        <div className='columns'>
+                            <div className="column">
+                                <div className='card'>
+                                    <header className="card-header">
+                                        <p className="card-header-title">
+                                            Productos de la  Categoría
                                     </p>
-                                </header>
-                                <div className="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
-                                    <div className="content">
-                                        <table className="table is-hoverable">
-                                            <tr>
-                                                <th>Producto</th>
-                                                <th>Descripción</th>
-                                                <th>Precio</th>
-                                            </tr>
-                                            {filteredProductsList.map(product =>
-                                                <tr onClick={() => addProduct(product)} key={product.id}>
-                                                    <td>{product.name} </td>
-                                                    <td>{product.description} </td>
-                                                    <td>  <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
-                                                        value={product.price} displayType={'text'} thousandSeparator={true}
-                                                        prefix={'$'} /></td>
+                                    </header>
+                                    <div className="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
+                                        <div className="content">
+                                            <table className="table is-hoverable">
+                                                <tr>
+                                                    <th>Producto</th>
+                                                    <th>Descripción</th>
+                                                    <th>Precio</th>
                                                 </tr>
-                                            )}
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column">
-                            <div className='card'>
-                                <header className="card-header">
-                                    <p className="card-header-title">
-                                        Productos en la Orden
-                                    </p>
-                                </header>
-                                <div className="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
-                                    <div className="content">
-                                        <table className="table is-hoverable">
-                                            <tr>
-                                                <th>Producto</th>
-                                                <th>Descripción</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio Unitario</th>
-                                                <th>Total</th>
-                                            </tr>
-                                            {orderProducts.map(product =>
-                                                <tr key={product.id}>
-                                                    <td>{product.name} </td>
-                                                    <td>{product.description} </td>
-                                                    <td><div style={{ display: 'flex' }}>
-                                                        <button onClick={() => lessProduct(product)} style={quantityButtonStyle}>-</button>
-                                                        <div style={productQuantityStyle}> {product.quantity} </div>
-                                                        <button onClick={() => moreProduct(product)} style={quantityButtonStyle}>+</button>
-                                                    </div>
-                                                    </td>
-                                                    <td>
-                                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                {filteredProductsList.map(product =>
+                                                    <tr onClick={() => addProduct(product)} key={product.id}>
+                                                        <td>{product.name} </td>
+                                                        <td>{product.description} </td>
+                                                        <td>  <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
                                                             value={product.price} displayType={'text'} thousandSeparator={true}
-                                                            prefix={'$'} />
-                                                    </td>
-                                                    <td>
-                                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
-                                                            value={product.price * product.quantity} displayType={'text'} thousandSeparator={true}
-                                                            prefix={'$'} />
-                                                    </td>
-                                                </tr>)}
-                                        </table>
+                                                            prefix={'$'} /></td>
+                                                    </tr>
+                                                )}
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <br />
-                            <button onClick={() => setOpen(true)} disabled={orderProducts.length > 0 ? false : true} className='button is-success is-fullwidth'>CONFIRMAR ORDEN</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <Modal open={open} onClose={() => setOpen(false)} center >
-            <div style={{ padding: '2.5rem' }}>
-                <div className="modal-header">
-                    <h1 class="title">Confirmar Orden</h1>
-                    <h2 class="subtitle">Confirmación de la orden</h2>
-                </div>
-                <div className="modal-body">
-                    <br />
-                    <div className="user-status table-responsive products-table">
-                        <table className="table table-bordernone mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Cantidad</th>
-                                    <th scope="col">Producto</th>
-                                    <th scope="col">Descripción</th>
-                                    <th scope="col">Precio Unitario</th>
-                                    <th scope="col">Total</th>
-                                </tr>
-                            </thead>
-                            {orderProducts.map(product =>
-                                <tr key={product.id}>
-                                    <td>{product.quantity} </td>
-                                    <td>{product.name} </td>
-                                    <td>{product.description} </td>
-                                    <td>
-                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
-                                            value={product.price} displayType={'text'} thousandSeparator={true}
-                                            prefix={'$'} />
-                                    </td>
-                                    <td>
-                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
-                                            value={product.price * product.quantity} displayType={'text'} thousandSeparator={true}
-                                            prefix={'$'} />
-                                    </td>
-                                </tr>
-                            )}
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td className='is-success'>Total a pagar</td>
-                                <td className='is-success'>
-                                    <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
-                                        value={totalOrder()} displayType={'text'} thousandSeparator={true}
-                                        prefix={'$'} />
-                                </td>
-                            </tr>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <div className="row" style={{ /* backgroundColor: '#f5f5f5', */ padding: '3%', marginTop: '4%' }}>
-                            <div className='col'><b>Método de pago</b></div>
-                            <div className='columns'>
-                                <div className="column" >
-                                    <label className="d-block" >
-                                        <input onChange={() => setPayMethod('cash')} className="radio_animated" id="edo-ani3" type="radio" name="rdo-ani2" defaultChecked />Efectivo
-                            </label>
+                            <div className="column">
+                                <div className='card'>
+                                    <header className="card-header">
+                                        <p className="card-header-title">
+                                            Productos en la Orden
+                                    </p>
+                                    </header>
+                                    <div className="card-content" style={{ overflow: 'scroll', height: '20rem' }}>
+                                        <div className="content">
+                                            <table className="table is-hoverable">
+                                                <tr>
+                                                    <th>Producto</th>
+                                                    <th>Descripción</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                                {orderProducts.map(product =>
+                                                    <tr key={product.id}>
+                                                        <td>{product.name} </td>
+                                                        <td>{product.description} </td>
+                                                        <td><div style={{ display: 'flex' }}>
+                                                            <button onClick={() => lessProduct(product)} style={quantityButtonStyle}>-</button>
+                                                            <div style={productQuantityStyle}> {product.quantity} </div>
+                                                            <button onClick={() => moreProduct(product)} style={quantityButtonStyle}>+</button>
+                                                        </div>
+                                                        </td>
+                                                        <td>
+                                                            <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                                value={product.price} displayType={'text'} thousandSeparator={true}
+                                                                prefix={'$'} />
+                                                        </td>
+                                                        <td>
+                                                            <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                                value={product.price * product.quantity} displayType={'text'} thousandSeparator={true}
+                                                                prefix={'$'} />
+                                                        </td>
+                                                    </tr>)}
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="column" >
-                                    <label className="d-block">
-                                        <input onChange={() => setPayMethod('debit')} className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" />Tarjeta de debito
-                            </label>
-                                </div>
-                                <div className="column" >
-                                    <label className="d-block">
-                                        <input onChange={() => setPayMethod('credit')} className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" /> Tarjeta de credito
-                            </label>
-                                </div>
+                                <br />
+                                <button onClick={() => setOpen(true)} disabled={orderProducts.length > 0 ? false : true} className='button is-success is-fullwidth'>CONFIRMAR ORDEN</button>
                             </div>
-
                         </div>
                     </div>
-                </div>
-                <div className="modal-footer">
-                    <button onClick={order} className="button is-success">Ordenar</button>
-                    <button className="button" onClick={() => setOpen(false)}>Cancelar</button>
-                </div>
+                </section>
             </div>
-        </Modal>
-    </>)
+            <Modal open={open} onClose={() => setOpen(false)} center >
+                <div style={{ padding: '2.5rem' }}>
+                    <div className="modal-header">
+                        <h1 class="title">Confirmar Orden</h1>
+                        <h2 class="subtitle">Confirmación de la orden</h2>
+                    </div>
+                    <div className="modal-body">
+                        <br />
+                        <div className="user-status table-responsive products-table">
+                            <table className="table table-bordernone mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Descripción</th>
+                                        <th scope="col">Precio Unitario</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                {orderProducts.map(product =>
+                                    <tr key={product.id}>
+                                        <td>{product.quantity} </td>
+                                        <td>{product.name} </td>
+                                        <td>{product.description} </td>
+                                        <td>
+                                            <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                value={product.price} displayType={'text'} thousandSeparator={true}
+                                                prefix={'$'} />
+                                        </td>
+                                        <td>
+                                            <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                                value={product.price * product.quantity} displayType={'text'} thousandSeparator={true}
+                                                prefix={'$'} />
+                                        </td>
+                                    </tr>
+                                )}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td className='is-success'>Total a pagar</td>
+                                    <td className='is-success'>
+                                        <CurrencyFormat decimalScale={2} fixedDecimalScale={true}
+                                            value={totalOrder()} displayType={'text'} thousandSeparator={true}
+                                            prefix={'$'} />
+                                    </td>
+                                </tr>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <div className="row" style={{ /* backgroundColor: '#f5f5f5', */ padding: '3%', marginTop: '4%' }}>
+                                <div className='col'><b>Método de pago</b></div>
+                                <div className='columns'>
+                                    <div className="column" >
+                                        <label className="d-block" >
+                                            <input onChange={() => setPayMethod('cash')} className="radio_animated" id="edo-ani3" type="radio" name="rdo-ani2" defaultChecked />Efectivo
+                            </label>
+                                    </div>
+                                    <div className="column" >
+                                        <label className="d-block">
+                                            <input onChange={() => setPayMethod('debit')} className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" />Tarjeta de debito
+                            </label>
+                                    </div>
+                                    <div className="column" >
+                                        <label className="d-block">
+                                            <input onChange={() => setPayMethod('credit')} className="radio_animated" id="edo-ani4" type="radio" name="rdo-ani2" /> Tarjeta de credito
+                            </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button onClick={order} className="button is-success">Ordenar</button>
+                        <button className="button" onClick={() => setOpen(false)}>Cancelar</button>
+                    </div>
+                </div>
+            </Modal>
+        </>)
 }
 export default Newsale;

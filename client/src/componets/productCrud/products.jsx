@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react'
@@ -148,16 +149,22 @@ function Products() {
     const [description, setDescription] = useState('');
     const [available, setAvailable] = useState(false);
     const [redirect, setRedirect] = useState(false);
+    const [usertype, setUser] = useState('')
 
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            // User is signed in.
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
         } else {
-           setRedirect(true)
-           console.log("No estoy loggeado")
+            setRedirect(true)
+            console.log("No estoy loggeado")
         }
     });
-    
+
     const modify = async () => {
         const result = await Swal.fire({
             icon: "warning",
@@ -230,7 +237,7 @@ function Products() {
 
     return redirect ? <Redirect to='/' /> : (
         <div>
-            <Navbar />
+            {usertype === "admin" ? <Navbar /> : <Navbargen />}
             <section className="hero is-primary">
                 <div className="hero-body">
                     <div className="container">
