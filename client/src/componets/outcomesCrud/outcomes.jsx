@@ -128,13 +128,16 @@ function Outcomes() {
     const [defaultDate, setDefaultDate] = useState();
     const [redirect, setRedirect] = useState(false);
     const [usertype, setUser] = useState('')
+    const [name, setName] = useState('')
 
     async function getUserType(user, setUserType) {
         const userType = await db.collection("accounts").doc(user.uid).get()
         if (userType.exists)
             if (userType.data().type === 'admin') {
                 setUserType('admin')
+                setName(userType.data().name)
                 console.log('admin')
+                console.log('nombre: ' + name)
             } else {
                 setUserType('user')
                 console.log('user')
@@ -180,9 +183,11 @@ function Outcomes() {
         if (startDate && finalDate && kind) {
 
             console.log('get data')
+            console.log(name)
             const querySnapshot = await db.collection("outcomes")
                 .where('kind', '==', kind)
                 .where('date', '>', toDate(startDate, 0, 0, 0))
+                .where('authorizer', '==', name)
                 .where('date', '<=', toDate(finalDate, 23, 59, 59)).onSnapshot(querySnapshot => {
                     const temOutcomes = querySnapshot.docs.map(sale => {
                         return {
@@ -226,9 +231,9 @@ function Outcomes() {
             console.log("No estoy loggeado")
         }
     });
-    return redirect ? <Redirect to='/' /> :(
+    return redirect ? <Redirect to='/' /> : (
         <div>
-           {usertype === "admin" ? <Navbar /> : <Navbargen/>}
+            {usertype === "admin" ? <Navbar /> : <Navbargen />}
             <section class="hero is-primary">
                 <div class="hero-body">
                     <div class="container">
