@@ -333,8 +333,8 @@ function Outcomes() {
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select className='select ' defaultValue={outcome.status} onChange={e => setNewState(e.target.value)} >
-                                        <option>No autorizado</option>
                                         <option>Autorizado</option>
+                                        <option>No autorizado</option>
                                     </select>
                                 </div>
                             </div>

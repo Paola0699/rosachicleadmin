@@ -23,7 +23,7 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
         name: 'Categoría',
         selector: 'category',
         sortable: true,
-        right: true,
+        left: true,
     },
     {
         name: 'Costo',
@@ -37,7 +37,7 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
             prefix={'$'}
         />,
         sortable: true,
-        right: true,
+        left: true,
     },
     {
         name: 'Precio',
@@ -51,7 +51,7 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
             prefix={'$'}
         />,
         sortable: true,
-        right: true,
+        left: true,
     },
     {
         name: 'Acciones',
@@ -59,7 +59,9 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
             <button onClick={() => { modal(true); seOrder(row) }} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>
             <button onClick={() => deleteProduct(row)} className='button is-success is-outlined'>Eliminar</button>
         </div>,
-        right: true,
+        wrap: false,
+        left: true,
+        width: '15rem',
     }
 ]);
 
