@@ -204,7 +204,7 @@ function Newoutcome() {
                                                 <div class="select is-fullwidth">
                                                     <select ref={responsableRef} onChange={e => setResponsable(e.target.value)}>
                                                         <option selected disabled value="">Seleccione</option>
-                                                        <option value='juanPerez'>Juan Pérez</option>
+                                                        <option value='Adriana Vargas'>Adriana Vargas</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -215,7 +215,8 @@ function Newoutcome() {
                                                 <div class="select is-fullwidth">
                                                     <select ref={authorizerRef} onChange={e => setAuthorizer(e.target.value)}>
                                                         <option selected disabled value="">Seleccione</option>
-                                                        <option value='sanjuanero'>Guillermo Sanjuanero</option>
+                                                        <option value='Guillermo Sanjuanero'>Guillermo Sanjuanero</option>
+                                                        <option value='Juanita Maldonado'>Juanita Maldonado</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -244,7 +245,7 @@ function Newoutcome() {
 
                                         <div class="file has-name is-boxed is-fullwidth">
                                             <label class="file-label">
-                                                <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} class="file-input" type="file" name="resume" />
+                                                <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} class="file-input" type="file" name="resume"  accept="image/x-png,image/gif,image/jpeg" />
                                                 <span class="file-cta">
                                                     <span class="file-icon">
                                                         <FontAwesomeIcon icon={faUpload} />
