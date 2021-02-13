@@ -1,43 +1,22 @@
 import logo from "../../assets/images/logos/logo3.png"
 import { Link } from 'react-router-dom'
 import firebase from '../../firebaseElements/firebase'
+import { useEffect, useState } from "react";
 
-document.addEventListener('DOMContentLoaded', () => {
 
-    // Get all "navbar-burger" elements
-    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-    // Check if there are any navbar burgers
-    if ($navbarBurgers.length > 0) {
-
-        // Add a click event on each of them
-        $navbarBurgers.forEach(el => {
-            el.addEventListener('click', () => {
-
-                // Get the target from the "data-target" attribute
-                const target = el.dataset.target;
-                const $target = document.getElementById(target);
-
-                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-                el.classList.toggle('is-active');
-                $target.classList.toggle('is-active');
-
-            });
-        });
-    }
-
-});
-
-function close(){
-    firebase.auth().signOut().then(function() {
+function close() {
+    firebase.auth().signOut().then(function () {
         console.log('Sign-out uccessful')
-      }).catch(function(error) {
+    }).catch(function (error) {
         // An error happened.
-      }); 
+    });
 }
 
 function Navbar() {
+    const [isActive, setisActive] = useState(false);
+
     return (
+
         <div>
             <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">
@@ -45,14 +24,27 @@ function Navbar() {
                         <img src={logo} />
                     </a>
 
-                    <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <a
+                        role="button"
+                        className={`navbar-burger burger ${isActive ? "is-active" : ""}`}
+                        aria-label="menu"
+                        aria-expanded="false"
+                        data-target="navbarBasicExample"
+
+                        onClick={() => {
+                            setisActive(!isActive);
+                        }}
+                    >
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                     </a>
                 </div>
 
-                <div id="navbarBasicExample" className="navbar-menu">
+                <div
+                    id="navbarBasicExample"
+                    className={`navbar-menu ${isActive ? "is-active" : ""}`}
+                >
                     <div className="navbar-start">
                         <div className="navbar-item has-dropdown is-hoverable">
                             <a className="navbar-link">
