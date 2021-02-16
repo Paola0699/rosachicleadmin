@@ -90,7 +90,14 @@ function Navbargen() {
                                         Nueva Venta
                                 </a>
                                 </Link>
+                                <Link to={`${process.env.PUBLIC_URL}/ventas`}>
+                                    <a className="navbar-item">
+                                        Ventas Generales
+                                </a>
+                                </Link>
                             </div>
+
+
                         </div>
                     </div>
 
