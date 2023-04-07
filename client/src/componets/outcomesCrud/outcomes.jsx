@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import firebase from '../../firebaseElements/firebase'
@@ -9,6 +10,7 @@ import 'react-responsive-modal/styles.css';
 import CurrencyFormat from 'react-currency-format';
 import Swal from 'sweetalert2'
 import './outcome.scss'
+import { Redirect } from "react-router-dom"
 
 const db = firebase.firestore();
 const data = [{ id: 1, name: 'VITA - C', cathegory: 'Juice', description: 'naranja, guayaba, piña, miel, limón, jengibre', year: '1982' }];
@@ -46,7 +48,7 @@ const columns = memoize((modal, outcome) => [
 
     {
         name: 'Status',
-        cell: row => <div>{row.status === "No autorizado" ? <h1 style={{color:'red', fontWeight:'700'}}>No Autorizado</h1> : row.status === "Pendiente" ? <h1 style={{color:'orange', fontWeight:'700'}}>Pendiente</h1> : <h1 style={{color:'green', fontWeight:'700'}}>Autorizado</h1>}</div>,
+        cell: row => <div>{row.status === "No autorizado" ? <h1 style={{ color: 'red', fontWeight: '700' }}>No Autorizado</h1> : row.status === "Pendiente" ? <h1 style={{ color: 'orange', fontWeight: '700' }}>Pendiente</h1> : <h1 style={{ color: 'green', fontWeight: '700' }}>Autorizado</h1>}</div>,
         sortable: true,
         left: true,
     },
@@ -89,7 +91,7 @@ const customStyles = {
             color: '#616161',
             paddingLeft: '16px',
             paddingRight: '16px',
-          
+
         },
         activeSortStyle: {
             color: '#1293e1',
@@ -123,14 +125,17 @@ function Outcomes() {
     const [outcomes, setOutcomes] = useState([]);
     const [userType, setUserType] = useState("")
     const [newSatate, setNewState] = useState()
-    const [defaultDate, setDefaultDate] =useState();
+    const [defaultDate, setDefaultDate] = useState();
+    const [redirect, setRedirect] = useState(false);
+    const [usertype, setUser] = useState('')
+    const [name, setName] = useState('')
 
     async function getUserType(user, setUserType) {
         const userType = await db.collection("accounts").doc(user.uid).get()
         if (userType.exists)
             if (userType.data().type === 'admin') {
                 setUserType('admin')
-                console.log('admin')
+                setName(userType.data().name)
             } else {
                 setUserType('user')
                 console.log('user')
@@ -148,8 +153,8 @@ function Outcomes() {
         });
 
         const today = new Date()
-        let month = today.getMonth()+1 <= 9 ?  `0${today.getMonth()+1}` :today.getMonth()+1
-        let day = today.getDate() <= 9 ?  `0${today.getDate()}` : today.getDate()
+        let month = today.getMonth() + 1 <= 9 ? `0${today.getMonth() + 1}` : today.getMonth() + 1
+        let day = today.getDate() <= 9 ? `0${today.getDate()}` : today.getDate()
         let customDate = `${today.getFullYear()}-${month}-${day}`
 
 
@@ -173,9 +178,27 @@ function Outcomes() {
     }
 
     const getAllData = async () => {
-        if (startDate && finalDate && kind) {
+        if (startDate && finalDate && kind && name) {
 
             console.log('get data')
+            console.log(name)
+            const querySnapshot = await db.collection("outcomes")
+                .where('kind', '==', kind)
+                .where('date', '>', toDate(startDate, 0, 0, 0))
+                .where('authorizer', '==', name)
+                .where('status', '==', 'Pendiente')
+                .where('date', '<=', toDate(finalDate, 23, 59, 59)).onSnapshot(querySnapshot => {
+                    const temOutcomes = querySnapshot.docs.map(sale => {
+                        return {
+                            id: sale.id,
+                            ...sale.data()
+                        }
+                    })
+                    setOutcomes(temOutcomes)
+                })
+        }
+
+        else if (startDate && finalDate && kind) {
             const querySnapshot = await db.collection("outcomes")
                 .where('kind', '==', kind)
                 .where('date', '>', toDate(startDate, 0, 0, 0))
@@ -208,9 +231,23 @@ function Outcomes() {
             )
         );
     }
-    return (
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
+        } else {
+            setRedirect(true)
+            console.log("No estoy loggeado")
+        }
+    });
+    return redirect ? <Redirect to='/' /> : (
         <div>
-            <Navbar />
+            {usertype === "admin" ? <Navbar /> : <Navbargen />}
             <section class="hero is-primary">
                 <div class="hero-body">
                     <div class="container">
@@ -243,7 +280,7 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de inicio</label>
                                 <div class="control">
-                                    <input defaultValue={defaultDate}  onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate} onChange={e => setStartDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -251,7 +288,7 @@ function Outcomes() {
                             <div class="field">
                                 <label class="label">Fecha de Fin</label>
                                 <div class="control">
-                                    <input defaultValue={defaultDate}  onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
+                                    <input defaultValue={defaultDate} onChange={e => setFinalDate(e.target.value)} class="input" type="date" placeholder="Nombre del producto" />
                                 </div>
                             </div>
                         </div>
@@ -296,19 +333,19 @@ function Outcomes() {
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select className='select ' defaultValue={outcome.status} onChange={e => setNewState(e.target.value)} >
-                                        <option>No autorizado</option>
                                         <option>Autorizado</option>
+                                        <option>No autorizado</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <button className='button is-success is-fullwidth' onClick={changeStatus} >Cambiar status</button>
                         <br />
-                        <br/>
+                        <br />
                     </>) :
                         <h3 class="subtitle is-size-6"> <b>Status: </b> {outcome.status}</h3>
                     }
-                    <img style={{ width: '25rem' }} src={outcome.ticketImg} alt="ticketImg" />x
+                    <img style={{ width: '25rem' }} src={outcome.ticketImg} alt="ticketImg" />
                     <div className="modal-footer">
 
                     </div>

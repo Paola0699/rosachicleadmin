@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react'
@@ -10,6 +11,7 @@ import 'react-responsive-modal/styles.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import CurrencyFormat from 'react-currency-format';
+import { Redirect } from "react-router-dom"
 
 const columns = memoize((deleteProduct, seOrder, modal) => [
     {
@@ -21,7 +23,7 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
         name: 'Categoría',
         selector: 'category',
         sortable: true,
-        right: true,
+        left: true,
     },
     {
         name: 'Costo',
@@ -35,7 +37,7 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
             prefix={'$'}
         />,
         sortable: true,
-        right: true,
+        left: true,
     },
     {
         name: 'Precio',
@@ -49,7 +51,7 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
             prefix={'$'}
         />,
         sortable: true,
-        right: true,
+        left: true,
     },
     {
         name: 'Acciones',
@@ -57,7 +59,9 @@ const columns = memoize((deleteProduct, seOrder, modal) => [
             <button onClick={() => { modal(true); seOrder(row) }} className='button is-success' style={{ marginRight: '2%' }}>Detalles</button>
             <button onClick={() => deleteProduct(row)} className='button is-success is-outlined'>Eliminar</button>
         </div>,
-        right: true,
+        wrap: false,
+        left: true,
+        width: '15rem',
     }
 ]);
 
@@ -146,7 +150,22 @@ function Products() {
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [available, setAvailable] = useState(false);
+    const [redirect, setRedirect] = useState(false);
+    const [usertype, setUser] = useState('')
 
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
+        } else {
+            setRedirect(true)
+            console.log("No estoy loggeado")
+        }
+    });
 
     const modify = async () => {
         const result = await Swal.fire({
@@ -162,7 +181,7 @@ function Products() {
                 cost: Number(cost),
                 price: Number(price),
                 description: description,
-                available : available
+                available: available
             }).then(() => {
                 Swal.fire(
                     'Actualizado!',
@@ -209,7 +228,7 @@ function Products() {
             setFilteredProductsList(productsList)
     }
 
-    const selectProduct = pro=>{
+    const selectProduct = pro => {
         setorderDetail(pro)
         setCal(pro.cal)
         setCost(pro.cost)
@@ -217,9 +236,10 @@ function Products() {
         setDescription(pro.description)
         setAvailable(pro.available)
     }
-    return (
+
+    return redirect ? <Redirect to='/' /> : (
         <div>
-            <Navbar />
+            {usertype === "admin" ? <Navbar /> : <Navbargen />}
             <section className="hero is-primary">
                 <div className="hero-body">
                     <div className="container">
@@ -272,7 +292,7 @@ function Products() {
                     <div className="field">
                         <label className="label">Costo de Producción</label>
                         <div className="control  has-icons-left">
-                            <input onChange={e => setCost(e.target.value)} defaultValue={orderDetail.cost} className="input" type="number" />
+                            <input onChange={e => setCost(e.target.value)} defaultValue={orderDetail.cost} className="input" type="number" min="0" step="0.01" />
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>
@@ -282,7 +302,7 @@ function Products() {
                     <div className="field">
                         <label className="label">Precio de Venta</label>
                         <div className="control  has-icons-left">
-                            <input onChange={e => setPrice(e.target.value)} defaultValue={orderDetail.price} className="input" type="number" />
+                            <input onChange={e => setPrice(e.target.value)} defaultValue={orderDetail.price} className="input" type="number" min="0" step="0.01" />
                             <span className="icon is-small is-left">
                                 <FontAwesomeIcon icon={faDollarSign} />
                             </span>

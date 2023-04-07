@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import DataTable from 'react-data-table-component';
 import CurrencyFormat from 'react-currency-format';
@@ -7,6 +8,9 @@ import firebase from '../../firebaseElements/firebase'
 import { Modal } from 'react-responsive-modal'
 import memoize from 'memoize-one';
 import 'react-responsive-modal/styles.css';
+import { Redirect } from "react-router-dom"
+
+
 const db = firebase.firestore();
 const columns = memoize((details, setDetails) => [
     {
@@ -111,15 +115,33 @@ function Sales() {
     const [totalCredit, setTotalCredit] = useState(0);
     const [open, setOpen] = useState(false);
     const [orderDetail, setorderDetail] = useState();
-    const [defaultDate, setDefaultDate] =useState();
+    const [defaultDate, setDefaultDate] = useState();
+    const [redirect, setRedirect] = useState(false);
+    const [usertype, setUser] = useState('')
+
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
+        } else {
+            setRedirect(true)
+            console.log("No estoy loggeado")
+        }
+    });
+
     useEffect(() => {
         getAllData()
         console.log('effect')
     }, [startDate, finalDate])
-    useEffect(()=>{
+    useEffect(() => {
         const today = new Date()
-        let month = today.getMonth()+1 <= 9 ?  `0${today.getMonth()+1}` :today.getMonth()+1
-        let day = today.getDate() <= 9 ?  `0${today.getDate()}` : today.getDate()
+        let month = today.getMonth() + 1 <= 9 ? `0${today.getMonth() + 1}` : today.getMonth() + 1
+        let day = today.getDate() <= 9 ? `0${today.getDate()}` : today.getDate()
         let customDate = `${today.getFullYear()}-${month}-${day}`
 
 
@@ -127,8 +149,8 @@ function Sales() {
         setDefaultDate(customDate)
         setStartDate(customDate)
         setFinalDate(customDate)
-        
-    },[])
+
+    }, [])
     const getAllData = async () => {
         if (startDate && finalDate) {
             const querySnapshot = await db.collection("orders")
@@ -163,9 +185,9 @@ function Sales() {
         const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
         return firebase.firestore.Timestamp.fromDate(temDate)
     }
-    return (
+    return redirect ? <Redirect to='/' /> : (
         <div>
-            <Navbar />
+            {usertype === "admin" ? <Navbar /> : <Navbargen />}
             <section class="hero is-primary">
                 <div class="hero-body">
                     <div class="container">
@@ -261,7 +283,7 @@ function Sales() {
                                     <td></td>
                                     <td></td>
                                     <td className='is-success'>TOTAL</td>
-                                    <td className='is-success'><b><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={orderDetail.total} displayType={'text'} thousandSeparator={true} prefix={'$'}/></b> </td>
+                                    <td className='is-success'><b><CurrencyFormat decimalScale={2} fixedDecimalScale={true} value={orderDetail.total} displayType={'text'} thousandSeparator={true} prefix={'$'} /></b> </td>
                                 </tr>
                             </table>
                         </div>

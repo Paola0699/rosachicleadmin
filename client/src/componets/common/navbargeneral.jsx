@@ -12,7 +12,7 @@ function close() {
     });
 }
 
-function Navbar() {
+function Navbargen() {
     const [isActive, setisActive] = useState(false);
     return (
         <div>
@@ -39,10 +39,8 @@ function Navbar() {
                     </a>
                 </div>
 
-                <div
-                    id="navbarBasicExample"
-                    className={`navbar-menu ${isActive ? "is-active" : ""}`}
-                >
+                <div id="navbarBasicExample"
+                    className={`navbar-menu ${isActive ? "is-active" : ""}`}>
                     <div className="navbar-start">
                         <div className="navbar-item has-dropdown is-hoverable">
                             <a className="navbar-link">
@@ -79,15 +77,8 @@ function Navbar() {
                                         Consultar Gastos e Ingresos
                                     </a>
                                 </Link>
-                                <Link to={`${process.env.PUBLIC_URL}/balance-general`}>
-                                    <a className="navbar-item">
-                                        Balance General
-                            </a>
-                                </Link>
                             </div>
                         </div>
-
-
                         <div className="navbar-item has-dropdown is-hoverable">
                             <a className="navbar-link">
                                 Ventas
@@ -110,8 +101,9 @@ function Navbar() {
                                 </a>
                                 </Link>
                             </div>
-                        </div>
 
+
+                        </div>
                     </div>
 
                     <div className="navbar-end">
@@ -127,7 +119,7 @@ function Navbar() {
                     </div>
                 </div>
             </nav>
-        </div>
+        </div >
     );
 }
-export default Navbar;
+export default Navbargen;

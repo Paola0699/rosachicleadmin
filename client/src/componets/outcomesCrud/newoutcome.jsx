@@ -1,10 +1,12 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState, useRef } from "react";
 import firebase from '../../firebaseElements/firebase'
 import Swal from 'sweetalert2'
+import { Redirect } from "react-router-dom"
 
 const db = firebase.firestore();
 
@@ -19,6 +21,8 @@ function Newoutcome() {
     const [responsable, setResponsable] = useState('');
     const [authorizer, setAuthorizer] = useState('');
     const [fileName, setFileName] = useState('');
+    const [redirect, setRedirect] = useState(false);
+    const [usertype, setUser] = useState('')
 
     const ticket = useRef(null);
     const kindRef = useRef(null);
@@ -31,7 +35,7 @@ function Newoutcome() {
     const responsableRef = useRef(null);
     const authorizerRef = useRef(null);
 
-    const refs=[ticket,
+    const refs = [ticket,
         kindRef,
         conceptRef,
         quantityRef,
@@ -61,7 +65,7 @@ function Newoutcome() {
             ticketImg: downloadURL,
             status: 'Pendiente'
         }
-        if(outcomeKind) 
+        if (outcomeKind)
             newOutcome.outcomeKind = outcomeKind
         db.collection('outcomes').add(newOutcome).then(() => {
             Swal.fire(
@@ -69,7 +73,7 @@ function Newoutcome() {
                 'El movimiento se registro con exito',
                 'success'
             )
-            refs.forEach(ref=>ref.current.value='')
+            refs.forEach(ref => ref.current.value = '')
             //outcomeKindRef.current.value='Gasto General'
             //ticket.current.files[0]=''
             setFileName('')
@@ -88,15 +92,30 @@ function Newoutcome() {
         const temDate = new Date(Number(dataAux[0]), Number(dataAux[1]) - 1, Number(dataAux[2]), h, m, s)
         return firebase.firestore.Timestamp.fromDate(temDate)
     }
-    return (
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+                if (doc.data().type === 'admin') {
+                    setUser("admin")
+                }
+                else setUser("user")
+            })
+        } else {
+            setRedirect(true)
+            console.log("No estoy loggeado")
+        }
+    });
+
+    return redirect ? <Redirect to='/' /> : (
         <div>
-            <Navbar />
+            {usertype === "admin" ? <Navbar /> : <Navbargen/>}
             <section class="hero is-primary">
                 <div class="hero-body">
                     <div class="container">
                         <h1 class="title">Nuevo Gasto</h1>
                         <h2 class="subtitle">Dar de alta un nuevo gasto o ingreso</h2>
-                        <Breadcrum  parent='Gastos e Ingresos' children='Nuevo Gasto' />
+                        <Breadcrum parent='Gastos e Ingresos' children='Nuevo Gasto' />
                     </div>
                 </div>
             </section>
@@ -147,7 +166,7 @@ function Newoutcome() {
                                         <div class="field">
                                             <label class="label">*Importe</label>
                                             <div class="control">
-                                                <input ref={quantityRef} onChange={e => setQuantity(e.target.value)} class="input" type="number" placeholder="Nombre del producto" />
+                                                <input ref={quantityRef} onChange={e => setQuantity(e.target.value)} class="input" type="number" placeholder="Nombre del producto" min="0" step="0.01" />
                                             </div>
                                         </div>
                                         <div class="field">
@@ -185,7 +204,7 @@ function Newoutcome() {
                                                 <div class="select is-fullwidth">
                                                     <select ref={responsableRef} onChange={e => setResponsable(e.target.value)}>
                                                         <option selected disabled value="">Seleccione</option>
-                                                        <option value='juanPerez'>Juan Pérez</option>
+                                                        <option value='Adriana Vargas'>Adriana Vargas</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -196,7 +215,8 @@ function Newoutcome() {
                                                 <div class="select is-fullwidth">
                                                     <select ref={authorizerRef} onChange={e => setAuthorizer(e.target.value)}>
                                                         <option selected disabled value="">Seleccione</option>
-                                                        <option value='sanjuanero'>Guillermo Sanjuanero</option>
+                                                        <option value='Guillermo Sanjuanero'>Guillermo Sanjuanero</option>
+                                                        <option value='Juanita Maldonado'>Juanita Maldonado</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -225,7 +245,7 @@ function Newoutcome() {
 
                                         <div class="file has-name is-boxed is-fullwidth">
                                             <label class="file-label">
-                                                <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} class="file-input" type="file" name="resume" />
+                                                <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} class="file-input" type="file" name="resume"  accept="image/x-png,image/gif,image/jpeg" />
                                                 <span class="file-cta">
                                                     <span class="file-icon">
                                                         <FontAwesomeIcon icon={faUpload} />

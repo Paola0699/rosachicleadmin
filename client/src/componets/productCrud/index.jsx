@@ -1,4 +1,5 @@
 import Navbar from "../common/navbar"
+import Navbargen from "../common/navbargeneral"
 import Breadcrum from "../common/breadcrum"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
@@ -6,6 +7,7 @@ import { useEffect, useState, useRef } from "react"
 import firebase from '../../firebaseElements/firebase'
 import Swal from 'sweetalert2'
 import { Modal } from 'react-responsive-modal'
+import { Redirect } from "react-router-dom"
 
 function ProductCrud() {
 
@@ -26,8 +28,8 @@ function ProductCrud() {
   const [fileName, setFileName] = useState('');
   const [open, setOpen] = useState(false);
   const [categoryDet, setCategoryDet] = useState();
-
-
+  const [redirect, setRedirect] = useState(false);
+  const [usertype, setUser] = useState('')
   //refs
   const categoryRef = useRef();
   const categoryDescriptionRef = useRef();
@@ -145,10 +147,10 @@ function ProductCrud() {
 
     //esta es una forma
     reader.readAsDataURL(file);
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       setFileName(this.result)
-    } 
-  
+    }
+
     /* 
     //esta es la otra
     reader.addEventListener("load", function () {
@@ -160,47 +162,47 @@ function ProductCrud() {
       reader.readAsDataURL(file);
     } */
   }
-  async function updateCategory (cat){
-    
+  async function updateCategory(cat) {
+
     let newData = {}
-    if(fileName){
+    if (fileName) {
       let storageRef = firebase.storage().ref();
       const ticketImg = storageRef.child(`cathegories/${Date.now()}.webp`);
       await ticketImg.put(ticket.current.files[0])
       const downloadURL = await ticketImg.getDownloadURL()
-      newData.cover = downloadURL 
+      newData.cover = downloadURL
     }
-      if(newCategory) 
-      newData.name = newCategory 
-      if(cat.visible && visible !==cat.visible) 
-      newData.visible =visible
-      if(cat.extern && extern !==cat.extern)
-        newData.extern = extern
-      if(categoryDescription) 
-        newData.description = categoryDescription 
-    
+    /*     if (newCategory)
+          newData.name = newCategory */
+    if (cat.visible && visible !== cat.visible)
+      newData.visible = visible
+    if (cat.extern && extern !== cat.extern)
+      newData.extern = extern
+    if (categoryDescription)
+      newData.description = categoryDescription
+
     db.collection('categories').doc(cat.id).update({
       ...newData
-  }).then(() => {
+    }).then(() => {
       Swal.fire(
-          'Actualizado!',
-          'El status se actulizo con exito',
-          'success'
+        'Actualizado!',
+        'El status se actulizo con exito',
+        'success'
       )
       setFileName('')
       setNewCategory('')
       setVisible('')
       setExtern('')
       setDescription('')
-  }).catch(error =>
+    }).catch(error =>
       Swal.fire(
-          'Error!',
-          `Ocurrio un error: ${error}`,
-          'warning'
+        'Error!',
+        `Ocurrio un error: ${error}`,
+        'warning'
       )
-  );
+    );
   }
-  function closeModal(){
+  function closeModal() {
     setOpen(false)
     setFileName('')
     setNewCategory('')
@@ -208,9 +210,24 @@ function ProductCrud() {
     setExtern('')
     setDescription('')
   }
-  return (
+
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      db.collection("accounts").doc(user.uid).onSnapshot((doc) => {
+        if (doc.data().type === 'admin') {
+          setUser("admin")
+        }
+        else setUser("user")
+      })
+    } else {
+      setRedirect(true)
+      console.log("No estoy loggeado")
+    }
+  });
+
+  return redirect ? <Redirect to='/' /> : (
     <div>
-      <Navbar />
+      {usertype === "admin" ? <Navbar /> : <Navbargen />}
       <section className="hero is-primary">
         <div className="hero-body">
           <div className="container">
@@ -248,7 +265,7 @@ function ProductCrud() {
                       <div className="field">
                         <label className="label">Descripción</label>
                         <div className="control">
-                          <textarea ref={categoryDescriptionRef} onChange={e=>setCategoryDescription(e.target.value)} className="textarea is-primary" placeholder="Descripción de la Categoría"></textarea>
+                          <textarea ref={categoryDescriptionRef} onChange={e => setCategoryDescription(e.target.value)} className="textarea" placeholder="Descripción de la Categoría"></textarea>
                         </div>
                       </div>
 
@@ -256,7 +273,7 @@ function ProductCrud() {
                       <label className="label">Portada</label>
                       <div className="file has-name is-fullwidth">
                         <label className="file-label">
-                          <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} className="file-input" type="file" name="resume" />
+                          <input onChange={e => setFileName(e.target.files[0].name)} ref={ticket} className="file-input" type="file" name="resume" accept="image/x-png,image/gif,image/jpeg" />
                           <span className="file-cta">
                             <span className="file-icon">
                               <i className="fas fa-upload"></i>
@@ -282,7 +299,7 @@ function ProductCrud() {
                         </div>
                         <div>
                           < label className="checkbox">
-                            <input ref={visibleRef} onChange={e => setVisible(e.target.checked)}  type="checkbox" />
+                            <input ref={visibleRef} onChange={e => setVisible(e.target.checked)} type="checkbox" />
                           Categoria Visible
                       </label>
                         </div>
@@ -319,8 +336,8 @@ function ProductCrud() {
                         <tr key={cat.id}>
                           <td> {cat.name} </td>
                           <td>
-                            <button style={{marginRight:'3%'}} onClick={() => deleteCategory(cat)} className="button is-success is-outlined is-small">Eliminar</button>
-                            <button onClick={()=>{setOpen(true);setCategoryDet(cat)}} className="button is-success is-small">Detalles</button>
+                            <button style={{ marginRight: '3%' }} onClick={() => deleteCategory(cat)} className="button is-success is-outlined is-small">Eliminar</button>
+                            <button onClick={() => { setOpen(true); setCategoryDet(cat) }} className="button is-success is-small">Detalles</button>
                           </td>
                         </tr>
                       )}
@@ -353,7 +370,7 @@ function ProductCrud() {
                       <label className="label">Categoría</label>
                       <div className="control">
                         <div className="select is-fullwidth">
-                          <select ref={categorySelectRef} onChange={e => setCategory(e.target.value)} >
+                          <select ref={categorySelectRef} onChange={e => setCategory(e.target.value)} required>
                             <option selected disabled value='' >Seleccione una categoría</option>
                             {categoriesList.map(cat =>
                               <option key={cat.id} value={cat.name}> {cat.name} </option>
@@ -377,7 +394,7 @@ function ProductCrud() {
                     <div className="field">
                       <label className="label">Costo de Producción</label>
                       <div className="control  has-icons-left">
-                        <input ref={costRef} onChange={e => setCost(e.target.value)} className="input" type="number" />
+                        <input ref={costRef} onChange={e => setCost(e.target.value)} className="input" type="number" min="0" step="0.01" />
                         <span className="icon is-small is-left">
                           <FontAwesomeIcon icon={faDollarSign} />
                         </span>
@@ -386,7 +403,7 @@ function ProductCrud() {
                     <div className="field">
                       <label className="label">Precio de venta</label>
                       <div className="control  has-icons-left">
-                        <input ref={priceRef} onChange={e => setPrice(e.target.value)} className="input" type="number" />
+                        <input ref={priceRef} onChange={e => setPrice(e.target.value)} className="input" type="number" min="0" step="0.01" />
                         <span className="icon is-small is-left">
                           <FontAwesomeIcon icon={faDollarSign} />
                         </span>
@@ -407,64 +424,62 @@ function ProductCrud() {
         </div>
       </section>
       {categoryDet ? <Modal open={open} onClose={closeModal} center >
-      <div>
-                      <div className="field">
-                        <label className="label">Nombre Categoría</label>
-                        <div className="control">
-                          <input defaultValue={categoryDet.name} ref={categoryRef} onChange={e => setNewCategory(e.target.value)} className="input " type="text" placeholder="Nombre Categoría" />
-                        </div>
-                      </div>
+        <div>
+          <br />
+          <div className="field">
+            <h1 style={{ fontSize: '1.5rem' }}>Nombre Categoría: <b>{categoryDet.name}</b></h1>
+          </div>
 
-                      <div className="field">
-                        <label className="label">Descripción</label>
-                        <div className="control">
-                          <textarea defaultValue={categoryDet.description} ref={categoryDescriptionRef} onChange={e=>setCategoryDescription(e.target.value)} className="textarea is-primary" placeholder="Descripción de la Categoría"></textarea>
-                        </div>
-                      </div>
+          <div className="field">
+            <label className="label">Descripción</label>
+            <div className="control">
+              <textarea defaultValue={categoryDet.description} ref={categoryDescriptionRef} onChange={e => setCategoryDescription(e.target.value)} className="textarea is-primary" placeholder="Descripción de la Categoría"></textarea>
+            </div>
+          </div>
 
 
-                      <label className="label">Portada</label>
-                      <img style={{ width: '25rem' }} src={ fileName ? fileName : categoryDet.cover} alt="ticketImg" />
-                      <div className="file has-name is-fullwidth">
-                        <label className="file-label">
-                          <input onChange={e => previewFile(e.target.files[0])} ref={ticket} className="file-input" type="file" name="resume" />
-                          <span className="file-cta">
-                            <span className="file-icon">
-                              <i className="fas fa-upload"></i>
+          <label className="label">Portada</label>
+          <img style={{ width: '25rem' }} src={fileName ? fileName : categoryDet.cover} alt="ticketImg" />
+          <div className="file has-name is-fullwidth">
+            <label className="file-label">
+              <input onChange={e => previewFile(e.target.files[0])} ref={ticket} className="file-input" type="file" name="resume" accept="image/x-png,image/gif,image/jpeg" />
+              <span className="file-cta">
+                <span className="file-icon">
+                  <i className="fas fa-upload"></i>
+                </span>
+                <span className="file-label">
+                  Elige un Archivo...
                             </span>
-                            <span className="file-label">
-                              Elige un Archivo...
-                            </span>
-                          </span>
-                          <span className="file-name">
-                            {fileName}
-                          </span>
-                        </label>
-                      </div>
+              </span>
+              <span className="file-name">
+                {fileName}
+              </span>
+            </label>
+          </div>
 
-                      <br />
+          <br />
 
-                      <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2%' }}>
-                        <div>
-                          <label className="checkbox">
-                            <input defaultChecked={categoryDet.extern} ref={externRef} type="checkbox" onChange={e => setExtern(e.target.checked)} />
+          <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2%' }}>
+            <div>
+              <label className="checkbox">
+                <input defaultChecked={categoryDet.extern} ref={externRef} type="checkbox" onChange={e => setExtern(e.target.checked)} />
                           Proveedor Externo
                       </label>
-                        </div>
-                        <div>
-                          < label className="checkbox">
-                            <input defaultChecked={categoryDet.visible}  ref={visibleRef} onChange={e => setVisible(e.target.checked)}  type="checkbox" />
+            </div>
+            <div>
+              < label className="checkbox">
+                <input defaultChecked={categoryDet.visible} ref={visibleRef} onChange={e => setVisible(e.target.checked)} type="checkbox" />
                           Categoria Visible
                       </label>
-                        </div>
-                      </div>
+            </div>
+          </div>
 
 
-                      <button onClick={()=>updateCategory(categoryDet)} type="submit" value='submit' className="button is-success is-fullwidth">
-                        Modificar Categoría
+          <button onClick={() => updateCategory(categoryDet)} type="submit" value='submit' className="button is-success is-fullwidth">
+            Modificar Categoría
                       </button>
-                    </div>
-            </Modal> : null}
+        </div>
+      </Modal> : null}
     </div>
   );
 }
