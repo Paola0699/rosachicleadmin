@@ -3,15 +3,15 @@ import { Route, useRouteMatch } from "react-router-dom";
 // Components
 import Helmet from "./common/Helmet";
 import Switch from "./common/Switch";
-import ProductCrud from './productCrud'
-import Products from './productCrud/products'
-import Newsale from './saleCrud/newsale'
-import Login from './Login'
-import Sales from './saleCrud/sales'
-import Salescat from './saleCrud/salescat'
-import Balance from './generalbalance'
-import Newoutcome from './outcomesCrud/newoutcome'
-import Outcomes from './outcomesCrud/outcomes'
+import { ProductCrud } from "./productCrud/index";
+import Products from "./productCrud/products";
+import Newsale from "./saleCrud/newsale";
+import Login from "./Login";
+import Sales from "./saleCrud/sales";
+import Salescat from "./saleCrud/salescat";
+import Balance from "./generalbalance";
+import Newoutcome from "./outcomesCrud/newoutcome";
+import Outcomes from "./outcomesCrud/outcomes";
 const routes = [
   {
     path: "",
@@ -35,21 +35,20 @@ const routes = [
   },
   {
     path: "ventas-desglosado",
-    component: <Salescat/>,
+    component: <Salescat />,
   },
   {
     path: "balance-general",
-    component: <Balance/>,
+    component: <Balance />,
   },
   {
     path: "alta-gasto",
-    component: <Newoutcome/>,
+    component: <Newoutcome />,
   },
   {
     path: "gastos",
-    component: <Outcomes/>,
+    component: <Outcomes />,
   },
-
 ];
 
 function Home() {

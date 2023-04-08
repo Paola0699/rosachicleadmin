@@ -3,7 +3,7 @@ import Modal from "react-responsive-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
-import { productValidationSchema } from "../../validationSchema/productValidationSchema";
+import { editProductValidationSchema } from "../../validationSchema/productValidationSchema";
 import { updateProduct } from "../../services/productsService";
 
 const ProductDetailsModal = ({ open, setOpen, orderDetail }) => {
@@ -16,7 +16,7 @@ const ProductDetailsModal = ({ open, setOpen, orderDetail }) => {
       DESCRIPCION: orderDetail.description,
       DISPONIBILIDAD: orderDetail.available,
     },
-    validationSchema: productValidationSchema,
+    validationSchema: editProductValidationSchema,
     onSubmit: async (values) => {
       const newOrderDetail = {
         ...values,
