@@ -8,6 +8,7 @@ import "react-responsive-modal/styles.css";
 import CurrencyFormat from "react-currency-format";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
+import { HeroTitle } from "../common/herotitle";
 
 const db = firebase.firestore();
 const quantityButtonStyle = {
@@ -172,15 +173,12 @@ function Newsale() {
     <>
       <div>
         {usertype === "admin" ? <Navbar /> : <Navbargen />}
-        <section className="hero is-primary">
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title">Nueva Venta</h1>
-              <h2 className="subtitle">Generar Venta</h2>
-              <Breadcrum parent="Ventas" children="Nueva Venta" />
-            </div>
-          </div>
-        </section>
+        <HeroTitle
+          title={"Nueva Venta"}
+          subtitle={"Generar Venta"}
+          parent={"Ventas"}
+          children={"Nueva Venta"}
+        />
         <section className="section">
           <div className="container">
             <div className="columns">

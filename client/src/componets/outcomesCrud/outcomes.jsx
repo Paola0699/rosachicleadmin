@@ -11,6 +11,7 @@ import CurrencyFormat from "react-currency-format";
 import Swal from "sweetalert2";
 import "./outcome.scss";
 import { Redirect } from "react-router-dom";
+import { HeroTitle } from "../common/herotitle";
 
 const db = firebase.firestore();
 const data = [
@@ -281,20 +282,12 @@ function Outcomes() {
   ) : (
     <div>
       {usertype === "admin" ? <Navbar /> : <Navbargen />}
-      <section className="hero is-primary">
-        <div className="hero-body">
-          <div className="container">
-            <h1 className="title">Gastos e Ingresos</h1>
-            <h2 className="subtitle">
-              Consulta los gastos e ingresos del periodo
-            </h2>
-            <Breadcrum
-              parent="Gastos e Ingresos"
-              children="Consultar Gastos e Ingresos"
-            />
-          </div>
-        </div>
-      </section>
+      <HeroTitle
+        title={"Gastos e Ingresos"}
+        subtitle={"Consulta los gastos e ingresos del periodo"}
+        parent={"Gastos e Ingresos"}
+        children={"Consultar Gastos e Ingresos"}
+      />
       <section className="section">
         <div className="container">
           <div className="columns">

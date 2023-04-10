@@ -50,7 +50,7 @@ function Login() {
     <Redirect to={"productos"} />
   ) : (
     <div className="App">
-      <section className="hero is-primary is-fullheight">
+      <section className="hero is-info is-fullheight">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">

@@ -5,6 +5,8 @@ import CurrencyFormat from "react-currency-format";
 import { useEffect, useState } from "react";
 import firebase from "../../firebaseElements/firebase";
 import { Redirect } from "react-router-dom";
+import { HeroTitle } from "../common/herotitle";
+import { tableCustomStyles } from "../../styles/tableStyles";
 
 const db = firebase.firestore();
 
@@ -67,58 +69,6 @@ const columns = [
     right: true,
   },
 ];
-
-const customStyles = {
-  header: {
-    style: {
-      fontSize: "22px",
-      color: "white",
-      backgroundColor: "#e91e63",
-      minHeight: "56px",
-      paddingLeft: "16px",
-      paddingRight: "8px",
-    },
-  },
-  headRow: {
-    style: {
-      backgroundColor: "#fafafa",
-      minHeight: "56px",
-      borderBottomWidth: "1.5px",
-      borderBottomColor: "#1293e1",
-      borderBottomStyle: "solid",
-    },
-    denseStyle: {
-      minHeight: "32px",
-    },
-  },
-  headCells: {
-    style: {
-      fontSize: "1rem",
-      fontWeight: 700,
-      color: "#616161",
-      paddingLeft: "16px",
-      paddingRight: "16px",
-    },
-    activeSortStyle: {
-      color: "#1293e1",
-      "&:focus": {
-        outline: "none",
-      },
-      "&:hover:not(:focus)": {
-        color: "#1293e1",
-      },
-    },
-    inactiveSortStyle: {
-      "&:focus": {
-        outline: "none",
-        color: "#1293e1",
-      },
-      "&:hover": {
-        color: "#4dbbff",
-      },
-    },
-  },
-};
 
 function Salescat() {
   const [startDate, setStartDate] = useState("");
@@ -201,15 +151,12 @@ function Salescat() {
   ) : (
     <div>
       <Navbar />
-      <section className="hero is-primary">
-        <div className="hero-body">
-          <div className="container">
-            <h1 className="title">Ventas por Categoría</h1>
-            <h2 className="subtitle">Consulta las ventas por categoría</h2>
-            <Breadcrum parent="Ventas" children="Ventas por Categoría" />
-          </div>
-        </div>
-      </section>
+      <HeroTitle
+        title={"Ventas por Categoría"}
+        subtitle={"Consulta las ventas por categoría"}
+        parent={"Ventas"}
+        children={"Ventas por Categoría"}
+      />
       <section className="section">
         <div className="container">
           <div className="columns">
@@ -324,7 +271,7 @@ function Salescat() {
             columns={columns}
             data={allProducts}
             pagination={true}
-            customStyles={customStyles}
+            customStyles={tableCustomStyles}
             paginationComponentOptions={{
               rowsPerPageText: "Filas por pagina:",
               rangeSeparatorText: "de",

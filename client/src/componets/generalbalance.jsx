@@ -1,9 +1,9 @@
 import Navbar from "./common/navbar";
-import Breadcrum from "./common/breadcrum";
 import CurrencyFormat from "react-currency-format";
 import { useEffect, useState } from "react";
 import firebase from "../firebaseElements/firebase";
 import { Redirect } from "react-router-dom";
+import { HeroTitle } from "./common/herotitle";
 
 const db = firebase.firestore();
 
@@ -187,17 +187,12 @@ function Balance() {
   ) : (
     <div>
       <Navbar />
-      <section className="hero is-primary">
-        <div className="hero-body">
-          <div className="container">
-            <h1 className="title">Balance General </h1>
-            <h2 className="subtitle">
-              Consulta la relación entre gastos e ingresos.
-            </h2>
-            <Breadcrum parent="Gastos e Ingresos" children="Balance General" />
-          </div>
-        </div>
-      </section>
+      <HeroTitle
+        title={"Balance General"}
+        subtitle={" Consulta la relación entre gastos e ingresos."}
+        parent={"Gastos e Ingresos"}
+        children={"Balance General"}
+      />
       <section className="section">
         <div className="container">
           <div className="columns">

@@ -1,14 +1,14 @@
 @charset "utf-8";
     $primary: rgb(34, 34, 34) ;
-    $success: #1293e1;
+    $success: #ec407a;
     $link: #fff;
-    $breadcrumb-item-active-color: #4dbbff;
+    $breadcrumb-item-active-color: #ec407a;
     $card-header-background-color:  rgba(219, 217, 217, 0.158);
-    $info: #1292e1c7;
+    $info: #ec407a;
     .login-logo {
         margin: 0 auto;
         margin-bottom: 20px;
-        max-height: 100px;
+        max-height: 200px;
       
     }
     @media screen and (max-width: 600px) {

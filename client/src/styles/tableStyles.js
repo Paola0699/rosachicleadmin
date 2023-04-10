@@ -15,7 +15,7 @@ export const tableCustomStyles = {
         backgroundColor: "#fafafa",
         minHeight: "56px",
         borderBottomWidth: "1.5px",
-        borderBottomColor: "#1293e1",
+        borderBottomColor: "#90afbc",
         borderBottomStyle: "solid",
       },
       denseStyle: {

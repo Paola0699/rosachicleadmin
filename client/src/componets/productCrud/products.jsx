@@ -11,6 +11,7 @@ import { Redirect } from "react-router-dom";
 import ProductDetailsModal from "./ProductDetailsModal";
 import { tableCustomStyles } from "../../styles/tableStyles";
 import { deleteProduct } from "../../services/productsService";
+import { HeroTitle } from "../common/herotitle";
 const db = firebase.firestore();
 
 const columns = memoize((deleteProduct, seOrder, modal) => [
@@ -147,15 +148,13 @@ const Products = () => {
   ) : (
     <div>
       {usertype === "admin" ? <Navbar /> : <Navbargen />}
-      <section className="hero is-primary">
-        <div className="hero-body">
-          <div className="container">
-            <h1 className="title">Productos</h1>
-            <h2 className="subtitle">Todos los Productos</h2>
-            <Breadcrum parent="Productos" children="Todos los Productos" />
-          </div>
-        </div>
-      </section>
+
+      <HeroTitle
+        title={"Productos"}
+        subtitle={"Todos los Productos"}
+        parent={"Productos"}
+        children={"Todos los Productos"}
+      />
       <section className="section">
         <div className="container">
           <div className="columns">

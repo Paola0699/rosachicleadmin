@@ -1,19 +1,18 @@
 @charset "utf-8";
     $primary: rgb(34, 34, 34) ;
-    $success: #1293e1;
+    $success: #a1c3d1;
+    $warning: #f172a1 ;
+    $info: #f172a1;
     $link: #fff;
-    $breadcrumb-item-active-color: #4dbbff;
+    $breadcrumb-item-active-color: #f06292;
     $card-header-background-color:  rgba(219, 217, 217, 0.158);
-    $info: #1292e1c7;
     .login-logo {
         margin: 0 auto;
         margin-bottom: 20px;
-        max-height: 100px;
+        max-height: 200px;
       
     } 
-    /* @media screen and (max-width: 600px) {
-        .ocultar-div{
-        display:none;
-        }
-    } */
+    .navbar-item img{
+        max-height: 3.5rem!important;
+    }
 @import "bulma/bulma.sass";

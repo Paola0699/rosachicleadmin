@@ -7,6 +7,7 @@ import { Redirect } from "react-router-dom";
 import NewCategoryCard from "./NewCategoryCard";
 import CategoriesListCard from "./CategoriesListCard";
 import NewProductCard from "./NewProductCard";
+import { HeroTitle } from "../common/herotitle";
 
 function ProductCrud() {
   const db = firebase.firestore();
@@ -34,15 +35,12 @@ function ProductCrud() {
   ) : (
     <div>
       {usertype === "admin" ? <Navbar /> : <Navbargen />}
-      <section className="hero is-primary">
-        <div className="hero-body">
-          <div className="container">
-            <h1 className="title">Nuevo Producto</h1>
-            <h2 className="subtitle">Alta de Productos</h2>
-            <Breadcrum parent="Productos" children="Nuevo Producto" />
-          </div>
-        </div>
-      </section>
+      <HeroTitle
+        title={"Nuevo Producto"}
+        subtitle={"Alta de Productos"}
+        parent={"Productos"}
+        children={"Nuevo Producto"}
+      />
       <section className="section">
         <div className="container">
           <div className="columns">
