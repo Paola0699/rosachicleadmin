@@ -1,6 +1,5 @@
 import Navbar from "../common/navbar";
 import Navbargen from "../common/navbargeneral";
-import Breadcrum from "../common/breadcrum";
 import DataTable from "react-data-table-component";
 import firebase from "../../firebaseElements/firebase";
 import { useEffect, useState } from "react";
@@ -12,21 +11,14 @@ import Swal from "sweetalert2";
 import "./outcome.scss";
 import { Redirect } from "react-router-dom";
 import { HeroTitle } from "../common/herotitle";
+import { tableCustomStyles } from "../../styles/tableStyles";
 
 const db = firebase.firestore();
-const data = [
-  {
-    id: 1,
-    name: "VITA - C",
-    cathegory: "Juice",
-    description: "naranja, guayaba, piña, miel, limón, jengibre",
-    year: "1982",
-  },
-];
+
 const columns = memoize((modal, outcome) => [
   {
     name: "Concepto",
-    selector: "concept",
+    selector: (row) => row["concept"],
     sortable: true,
   },
   {
@@ -44,7 +36,7 @@ const columns = memoize((modal, outcome) => [
 
   {
     name: "Importe",
-    selector: (row) => row.quantity,
+    selector: (row) => row["quantity"],
     cell: (row) => (
       <CurrencyFormat
         decimalScale={2}
@@ -76,7 +68,7 @@ const columns = memoize((modal, outcome) => [
   },
   {
     name: "Detalles",
-    selector: "year",
+    selector: (row) => row["year"],
     cell: (row) => (
       <button
         onClick={() => {
@@ -92,58 +84,6 @@ const columns = memoize((modal, outcome) => [
     left: true,
   },
 ]);
-
-const customStyles = {
-  header: {
-    style: {
-      fontSize: "22px",
-      color: "white",
-      backgroundColor: "#e91e63",
-      minHeight: "56px",
-      paddingLeft: "16px",
-      paddingRight: "8px",
-    },
-  },
-  headRow: {
-    style: {
-      backgroundColor: "#fafafa",
-      minHeight: "56px",
-      borderBottomWidth: "1.5px",
-      borderBottomColor: "#1293e1",
-      borderBottomStyle: "solid",
-    },
-    denseStyle: {
-      minHeight: "32px",
-    },
-  },
-  headCells: {
-    style: {
-      fontSize: "1rem",
-      fontWeight: 700,
-      color: "#616161",
-      paddingLeft: "16px",
-      paddingRight: "16px",
-    },
-    activeSortStyle: {
-      color: "#1293e1",
-      "&:focus": {
-        outline: "none",
-      },
-      "&:hover:not(:focus)": {
-        color: "#1293e1",
-      },
-    },
-    inactiveSortStyle: {
-      "&:focus": {
-        outline: "none",
-        color: "#1293e1",
-      },
-      "&:hover": {
-        color: "#4dbbff",
-      },
-    },
-  },
-};
 
 function Outcomes() {
   const [outcome, setOutcome] = useState();
@@ -219,8 +159,6 @@ function Outcomes() {
         .collection("outcomes")
         .where("kind", "==", kind)
         .where("date", ">", toDate(startDate, 0, 0, 0))
-        .where("authorizer", "==", name)
-        .where("status", "==", "Pendiente")
         .where("date", "<=", toDate(finalDate, 23, 59, 59))
         .onSnapshot((querySnapshot) => {
           const temOutcomes = querySnapshot.docs.map((sale) => {
@@ -248,6 +186,7 @@ function Outcomes() {
         });
     }
   };
+  console.log(outcomes);
 
   const changeStatus = () => {
     db.collection("outcomes")
@@ -343,7 +282,7 @@ function Outcomes() {
             columns={columns(setOpen, setOutcome)}
             data={outcomes}
             pagination={true}
-            customStyles={customStyles}
+            customStyles={tableCustomStyles}
             paginationComponentOptions={{
               rowsPerPageText: "Filas por pagina:",
               rangeSeparatorText: "de",
@@ -388,14 +327,6 @@ function Outcomes() {
             <h3 className="subtitle is-size-6">
               {" "}
               <b>Método de pago/cobro: </b> {outcome.paymethod}
-            </h3>
-            <h3 className="subtitle is-size-6">
-              {" "}
-              <b>Responsable: </b> {outcome.responsable}
-            </h3>
-            <h3 className="subtitle is-size-6">
-              {" "}
-              <b>Autoriza: </b> {outcome.authorizer}
             </h3>
             {userType === "admin" ? (
               <>

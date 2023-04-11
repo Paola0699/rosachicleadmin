@@ -307,17 +307,6 @@ function Balance() {
                       prefix={"$"}
                     />
                   </td>
-                  {/* <td >Polka Donuts</td>
-                                    <td >
-                                        <CurrencyFormat
-                                            decimalScale={2}
-                                            fixedDecimalScale={true}
-                                            value={250}
-                                            displayType={'text'}
-                                            thousandSeparator={true}
-                                            prefix={'$'}
-                                        />
-                                    </td> */}
                   <td
                     colSpan="2"
                     className="is-info"

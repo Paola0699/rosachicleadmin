@@ -1,6 +1,5 @@
 import Navbar from "../common/navbar";
 import Navbargen from "../common/navbargeneral";
-import Breadcrum from "../common/breadcrum";
 import { useState } from "react";
 import firebase from "../../firebaseElements/firebase";
 import { Redirect } from "react-router-dom";

@@ -56,7 +56,7 @@ function Home() {
 
   return (
     <div>
-      <Helmet title="THE MIXER ADMIN" />
+      <Helmet title="Rosa Chicle" />
       {/*  <Header /> */}
       <Switch>
         {routes.map((item, index) => (

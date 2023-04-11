@@ -20,7 +20,7 @@ function Navbargen() {
   return (
     <div>
       <nav
-        className="navbar is-primary"
+        className="navbar is-warning"
         role="navigation"
         aria-label="main navigation"
       >

@@ -1,7 +1,6 @@
 import Navbar from "../common/navbar";
 import Navbargen from "../common/navbargeneral";
-import Breadcrum from "../common/breadcrum";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import firebase from "../../firebaseElements/firebase";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";

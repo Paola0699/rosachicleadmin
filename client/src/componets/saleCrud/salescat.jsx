@@ -1,5 +1,4 @@
 import Navbar from "../common/navbar";
-import Breadcrum from "../common/breadcrum";
 import DataTable from "react-data-table-component";
 import CurrencyFormat from "react-currency-format";
 import { useEffect, useState } from "react";
