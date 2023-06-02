@@ -1,17 +1,12 @@
 import Swal from 'sweetalert2';
 import firebase from '../firebaseElements/firebase';
 const db = firebase.firestore();
-export const postNewCategory = async (categoryImg, categoryData) => {
+export const postNewCategory = async (categoryData) => {
     const { NOMBRE, DESCRIPCION, PROVEEDOR_EXTERNO, CATEGORIA_VISIBLE} = categoryData;
-    let storageRef = firebase.storage().ref();
-    const categoryCover = storageRef.child(`cathegories/${Date.now()}.webp`);
-    await categoryCover.put(categoryImg.current.files[0]);
-    const downloadURL = await categoryCover.getDownloadURL();
     let newCat = {
       name: NOMBRE,
       visible: CATEGORIA_VISIBLE,
       description: DESCRIPCION,
-      cover: downloadURL,
       extern: PROVEEDOR_EXTERNO
     };
     db.collection("categories")
@@ -53,16 +48,9 @@ export const postNewCategory = async (categoryImg, categoryData) => {
     }
   }
 
-  export  const updateCategory = async (cat, categoryData, fileName, categoryCover) => {
+  export  const updateCategory = async (cat, categoryData) => {
     const { DESCRIPCION, PROVEEDOR_EXTERNO, CATEGORIA_VISIBLE} = categoryData;
     let newData = {};
-    if (fileName) {
-      let storageRef = firebase.storage().ref();
-      const ticketImg = storageRef.child(`cathegories/${Date.now()}.webp`);
-      await ticketImg.put(categoryCover.current.files[0]);
-      const downloadURL = await ticketImg.getDownloadURL();
-      newData.cover = downloadURL;
-    }
   
     if (cat.visible && CATEGORIA_VISIBLE !== cat.visible) newData.visible = CATEGORIA_VISIBLE;
     if (cat.extern && PROVEEDOR_EXTERNO !== cat.extern) newData.extern = PROVEEDOR_EXTERNO;

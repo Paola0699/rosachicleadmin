@@ -1,15 +1,12 @@
 import { useFormik } from "formik";
-import React, { useRef, useState } from "react";
+import React from "react";
 import Modal from "react-responsive-modal";
 import { editCategoryValidationSchema } from "../../validationSchema/categoryValidationSchema";
 import { updateCategory } from "../../services/categoryService";
 
 const CategoryDetailsModal = ({ open, setOpen, categoryDet }) => {
-  const [fileName, setFileName] = useState("");
-  const categoryCover = useRef();
   function closeModal() {
     setOpen(false);
-    setFileName("");
   }
   const formik = useFormik({
     enableReinitialize: true,
@@ -20,16 +17,10 @@ const CategoryDetailsModal = ({ open, setOpen, categoryDet }) => {
     },
     validationSchema: editCategoryValidationSchema,
     onSubmit: (values) => {
-      updateCategory(categoryDet, values, fileName, categoryCover);
+      updateCategory(categoryDet, values);
     },
   });
-  function previewFile(file) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function (e) {
-      setFileName(this.result);
-    };
-  }
+
   return (
     <Modal open={open} onClose={closeModal} center>
       <form onSubmit={formik.handleSubmit}>
@@ -57,33 +48,6 @@ const CategoryDetailsModal = ({ open, setOpen, categoryDet }) => {
             ></textarea>
           </div>
         </div>
-
-        <label className="label">Portada</label>
-        <img
-          style={{ width: "25rem" }}
-          src={fileName ? fileName : categoryDet.cover}
-          alt="ticketImg"
-        />
-        <div className="file has-name is-fullwidth">
-          <label className="file-label">
-            <input
-              onChange={(e) => previewFile(e.target.files[0])}
-              ref={categoryCover}
-              className="file-input"
-              type="file"
-              name="resume"
-              accept="image/x-png,image/gif,image/jpeg"
-            />
-            <span className="file-cta">
-              <span className="file-icon">
-                <i className="fas fa-upload"></i>
-              </span>
-              <span className="file-label">Elige un Archivo...</span>
-            </span>
-            <span className="file-name">{fileName}</span>
-          </label>
-        </div>
-        <br />
         <div
           style={{
             display: "flex",

@@ -1,11 +1,9 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import { categoryValidationSchema } from "../../validationSchema/categoryValidationSchema";
 import { postNewCategory } from "../../services/categoryService";
 
 const NewCategoryCard = () => {
-  const [fileName, setFileName] = useState("");
-  const categoryCover = useRef();
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -16,7 +14,7 @@ const NewCategoryCard = () => {
     },
     validationSchema: categoryValidationSchema,
     onSubmit: (values) => {
-      postNewCategory(categoryCover, values);
+      postNewCategory(values);
       formik.resetForm();
     },
   });
@@ -65,30 +63,6 @@ const NewCategoryCard = () => {
                 ></textarea>
               </div>
             </div>
-
-            <label className="label">Portada</label>
-            <div className="file has-name is-fullwidth">
-              <label className="file-label">
-                <input
-                  onChange={(e) => setFileName(e.target.files[0].name)}
-                  ref={categoryCover}
-                  className="file-input"
-                  type="file"
-                  name="resume"
-                  accept="image/png,image/gif,image/jpeg, image/jpg"
-                />
-                <span className="file-cta">
-                  <span className="file-icon">
-                    <i className="fas fa-upload"></i>
-                  </span>
-                  <span className="file-label">Elige un Archivo...</span>
-                </span>
-                <span className="file-name">{fileName}</span>
-              </label>
-            </div>
-
-            <br />
-
             <div
               style={{
                 display: "flex",
@@ -126,7 +100,6 @@ const NewCategoryCard = () => {
               type="submit"
               value="submit"
               className="button is-success is-fullwidth"
-              disabled={!fileName}
             >
               Crear Categoría
             </button>
